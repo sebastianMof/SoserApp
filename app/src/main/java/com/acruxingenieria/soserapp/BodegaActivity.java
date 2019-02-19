@@ -1,10 +1,8 @@
 package com.acruxingenieria.soserapp;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,13 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
 
 public class BodegaActivity extends AppCompatActivity {
 
@@ -138,16 +130,12 @@ public class BodegaActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BodegaActivity.this, positionSelected + "\n" + bodegaSelected, Toast.LENGTH_LONG).show();
-                /*
                 Intent intent =new Intent(BodegaActivity.this,MenuActivity.class);
                 intent.putExtra("mUser", mUser);
                 intent.putExtra("positionSelected", positionSelected);
                 intent.putExtra("bodegaSelected", bodegaSelected);
                 startActivity(intent);
                 finish();
-                */
-
             }
         });
 
