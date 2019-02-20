@@ -1,12 +1,17 @@
 package com.acruxingenieria.soserapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class MarcajeMaterialFragment extends Fragment {
+
+    View savedView;
 
     public MarcajeMaterialFragment() {
         // Required empty public constructor
@@ -22,7 +27,32 @@ public class MarcajeMaterialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_marcaje_material, container, false);
+        savedView =inflater.inflate(R.layout.fragment_marcaje_material, container, false);
+        setSavedView(savedView);
+        configureButtonLeerBin();
+
+        return savedView;
+    }
+
+    private void configureButtonLeerBin() {
+
+        Button btn_leer_bin = (Button) getSavedView().findViewById(R.id.btnMarcajeMaterialLeerBin);
+        btn_leer_bin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(getActivity(),MarcajeLeerBinActivity.class);
+                startActivity(intent);
+
+            }
+        });
+    }
+
+    private void setSavedView(View savedView) {
+        this.savedView=savedView;
+    }
+
+    protected View getSavedView(){
+        return savedView;
     }
 
 

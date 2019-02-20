@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +33,8 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        configureButtonLogOut();
 
         receiveDataFromIntent();
 
@@ -116,6 +119,18 @@ public class MenuActivity extends AppCompatActivity {
                         break;
 
                 }
+            }
+        });
+    }
+
+    private void configureButtonLogOut() {
+        Button btn_logout = (Button) findViewById(R.id.btnMenuLogout);
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(MenuActivity.this,LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
