@@ -6,7 +6,10 @@
 
     <color name="color1">#022f40</color>
     <color name="color2">#d1c6ad</color>
-    <color name="color3">#6a5837</color>
+    <color name="color3">#d4bc90</color>
     <color name="color4">#272932</color>
-    <color name="color5">#335c81</color>
+    <color name="color5">#8da3b6</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlack">#000000</color>
 </resources>

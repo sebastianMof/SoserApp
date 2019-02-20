@@ -5,12 +5,91 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MarcajeActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color5"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <android.support.design.widget.BottomNavigationView
+                android:id="@+id/navigationMarcaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menu="@menu/navigation_marcaje"
+                app:itemBackground="@color/color5"
+                app:itemTextColor="@drawable/navigation_selector"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/color1"
+                android:textSize="18sp"
+                android:text="@string/digite_informaci_n_a_grabar"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1">
+            <FrameLayout
+                android:id="@+id/marcaje_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp">
+
+
+            <Button
+                android:id="@+id/btnMarcajeGrabarTAG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/grabar_tag"
+                android:layout_marginEnd="10dp"/>
+
+            <Button
+                android:id="@+id/btnMarcajeBorrarTAG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/borrar_tag"
+                android:layout_marginStart="10dp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

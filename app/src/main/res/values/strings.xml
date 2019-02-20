@@ -19,5 +19,18 @@
     <string name="bodega">Bodega: </string>
     <string name="bodegaUpperCase">BODEGA</string>
     <string name="nombreUpperCase">NOMBRE</string>
+    <string name="material">Material</string>
+    <string name="bin">Bin</string>
+    <string name="digite_informaci_n_a_grabar">Digite información a grabar</string>
+    <string name="grabar_tag">Grabar TAG</string>
+    <string name="borrar_tag">Borrar TAG</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="marcaje_material_nombre">Nombre</string>
+    <string name="marcaje_material_stockcode">Stockcode</string>
+    <string name="marcaje_material_bin">BIN</string>
+    <string name="marcaje_material_fecha_venc">Fecha ven.</string>
+    <string name="marcaje_material_cantidad">Cantidad</string>
 
 </resources>

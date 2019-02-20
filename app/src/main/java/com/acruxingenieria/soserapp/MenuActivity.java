@@ -1,11 +1,18 @@
 package com.acruxingenieria.soserapp;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -61,7 +68,24 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void configureMenuListView() {
-        menuAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,menuItems);
+        menuAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,menuItems){
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1) {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(getResources().getColor(R.color.color3));
+                } else {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(getResources().getColor(R.color.color5));
+                }
+
+                //------
+                return view;
+            }
+        };
 
         lv_menu=(ListView)findViewById(R.id.lvMenu);
         lv_menu.setAdapter(menuAdapter);
