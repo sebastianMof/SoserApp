@@ -32,5 +32,7 @@
     <string name="marcaje_material_bin">BIN</string>
     <string name="marcaje_material_fecha_venc">Fecha ven.</string>
     <string name="marcaje_material_cantidad">Cantidad</string>
+    <string name="selecci_n_de_bodega">Selección de bodega</string>
+    <string name="gesti_n_de_bodegas">Gestión de bodegas</string>
 
 </resources>

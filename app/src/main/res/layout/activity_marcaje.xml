@@ -80,14 +80,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/grabar_tag"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/color5"
+                android:textColor="@color/colorWhite"/>
 
             <Button
                 android:id="@+id/btnMarcajeBorrarTAG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/borrar_tag"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/color5"
+                android:textColor="@color/colorWhite"/>
 
         </LinearLayout>
 
