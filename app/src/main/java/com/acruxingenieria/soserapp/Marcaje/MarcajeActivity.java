@@ -1,4 +1,4 @@
-package com.acruxingenieria.soserapp;
+package com.acruxingenieria.soserapp.Marcaje;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -6,11 +6,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.acruxingenieria.soserapp.MenuActivity;
+import com.acruxingenieria.soserapp.R;
 
 public class MarcajeActivity extends AppCompatActivity {
 
@@ -62,6 +64,11 @@ public class MarcajeActivity extends AppCompatActivity {
         configureButtonAtras();
     }
 
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
     //REPLACE FRAGMENT METHOD
     public boolean loadFragment(Fragment fragment) {
         //switching fragment
@@ -80,10 +87,7 @@ public class MarcajeActivity extends AppCompatActivity {
         btn_atras.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(MarcajeActivity.this,MenuActivity.class);
-                startActivity(intent);
                 finish();
-
             }
         });
     }
@@ -159,8 +163,6 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("marcajeBinBin", et_marcaje_bin_bin.getText().toString());
                     startActivity(intent);
                 }
-
-
             }
         });
     }

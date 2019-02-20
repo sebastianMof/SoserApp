@@ -36,5 +36,10 @@
     <string name="gesti_n_de_bodegas">Gestión de bodegas</string>
     <string name="lector">Lector</string>
     <string name="esperando_lectura">Esperando lectura...</string>
+    <string name="instrucciones_grabar_tag">Seleccione tipo de lectura, apunte el lector y presione el gatillo en dirección a los materiales</string>
+    <string name="instruccion_borrar_tag">Seleccione tipo de lectura, apunte el lector y presione el gatillo en dirección al material</string>
+    <string name="instruccion_leer_bin">Seleccione tipo de lectura, apunte el lector y presione el gatillo en dirección al material</string>
+    <string name="leer_bin">Leer BIN</string>
+    <string name="borrar_tag_confirmacion">La siguiente información será borrada del TAG</string>
 
 </resources>

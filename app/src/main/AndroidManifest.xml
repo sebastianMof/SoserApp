@@ -23,12 +23,12 @@
         </activity>
         <activity android:name=".BodegaActivity" />
         <activity android:name=".MenuActivity" />
-        <activity android:name=".MarcajeActivity" />
-        <activity android:name=".ConsultaActivity" />
-        <activity android:name=".MarcajeGrabarTagActivity" />
-        <activity android:name=".MarcajeBorrarTagActivity" />
-        <activity android:name=".MarcajeBorrarTagConfirmacionActivity" />
-        <activity android:name=".MarcajeLeerBinActivity"></activity>
+        <activity android:name=".Marcaje.MarcajeActivity" />
+        <activity android:name=".Consulta.ConsultaActivity" />
+        <activity android:name=".Marcaje.MarcajeGrabarTagActivity" />
+        <activity android:name=".Marcaje.MarcajeBorrarTagActivity" />
+        <activity android:name=".Marcaje.MarcajeBorrarTagConfirmacionActivity" />
+        <activity android:name=".Marcaje.MarcajeLeerBinActivity"></activity>
     </application>
 
 </manifest>

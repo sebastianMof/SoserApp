@@ -1,13 +1,14 @@
-package com.acruxingenieria.soserapp;
+package com.acruxingenieria.soserapp.Marcaje;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.acruxingenieria.soserapp.R;
 
 public class MarcajeMaterialFragment extends Fragment {
 

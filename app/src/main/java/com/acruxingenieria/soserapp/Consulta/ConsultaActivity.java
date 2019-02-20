@@ -1,13 +1,15 @@
-package com.acruxingenieria.soserapp;
+package com.acruxingenieria.soserapp.Consulta;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MarcajeLeerBinActivity extends AppCompatActivity {
+import com.acruxingenieria.soserapp.R;
+
+public class ConsultaActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marcaje_leer_bin);
+        setContentView(R.layout.activity_consulta);
     }
 }

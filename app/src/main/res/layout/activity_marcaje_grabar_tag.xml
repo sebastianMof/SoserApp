@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MarcajeGrabarTagActivity">
+    tools:context=".Marcaje.MarcajeGrabarTagActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/color1"
                 android:textSize="18sp"
-                android:text="Seleccione tipo de lectura, apunte el lector y presione el gatillo en dirección a los materiales"/>
+                android:text="@string/instrucciones_grabar_tag"/>
 
         </LinearLayout>
 
@@ -110,6 +110,7 @@
                 android:layout_weight="1"
                 android:gravity="end">
                 <Spinner
+                    android:id="@+id/spinnerMarcajeGrabarTag"
                     android:layout_width="200dp"
                     android:layout_height="35dp"
                     >
