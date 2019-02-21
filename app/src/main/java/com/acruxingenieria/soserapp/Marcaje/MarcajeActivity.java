@@ -16,6 +16,10 @@ import com.acruxingenieria.soserapp.R;
 
 public class MarcajeActivity extends AppCompatActivity {
 
+    private String mUser;
+    private String positionSelected;
+    private String bodegaSelected;
+
     private boolean materialFragmentSelected = false;
     private boolean binFragmentSelected = false;
     private Fragment marcajeMaterialFragment = new MarcajeMaterialFragment();
@@ -52,6 +56,8 @@ public class MarcajeActivity extends AppCompatActivity {
         //navBar
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationMarcaje);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        receiveDataFromIntent();
 
         //default Fragment
         loadFragment(marcajeMaterialFragment);
@@ -98,7 +104,6 @@ public class MarcajeActivity extends AppCompatActivity {
         btn_grabar_tag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (materialFragmentSelected){
                     EditText et_marcaje_material_nombre = (EditText) findViewById(R.id.etMarcajeMaterialNombre);
                     EditText et_marcaje_material_stockcode = (EditText) findViewById(R.id.etMarcajeMaterialStock);
@@ -115,6 +120,10 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("marcajeMaterialFechavenc", et_marcaje_material_fechavenc.getText().toString());
                     intent.putExtra("marcajeMaterialCantidad", et_marcaje_material_cantidad.getText().toString());
 
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
                     startActivity(intent);
 
                 } else if (binFragmentSelected){
@@ -123,6 +132,11 @@ public class MarcajeActivity extends AppCompatActivity {
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeGrabarTagActivity.class);
                     intent.putExtra("tipoMarcaje", "bin");
                     intent.putExtra("marcajeBinBin", et_marcaje_bin_bin.getText().toString());
+
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
                     startActivity(intent);
                 }
 
@@ -136,7 +150,6 @@ public class MarcajeActivity extends AppCompatActivity {
         btn_borrar_tag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (materialFragmentSelected){
                     EditText et_marcaje_material_nombre = (EditText) findViewById(R.id.etMarcajeMaterialNombre);
                     EditText et_marcaje_material_stockcode = (EditText) findViewById(R.id.etMarcajeMaterialStock);
@@ -153,6 +166,10 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("marcajeMaterialFechavenc", et_marcaje_material_fechavenc.getText().toString());
                     intent.putExtra("marcajeMaterialCantidad", et_marcaje_material_cantidad.getText().toString());
 
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
                     startActivity(intent);
 
                 } else if (binFragmentSelected){
@@ -161,9 +178,22 @@ public class MarcajeActivity extends AppCompatActivity {
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
                     intent.putExtra("tipoMarcaje", "bin");
                     intent.putExtra("marcajeBinBin", et_marcaje_bin_bin.getText().toString());
+
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
                     startActivity(intent);
                 }
             }
         });
     }
+
+    private void receiveDataFromIntent() {
+        mUser= getIntent().getStringExtra("mUser");
+        positionSelected= getIntent().getStringExtra("positionSelected");
+        bodegaSelected= getIntent().getStringExtra("bodegaSelected");
+
+    }
+
 }

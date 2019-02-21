@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_consulta_unitaria"
+        android:title="@string/unitaria" />
+
+    <item
+        android:id="@+id/navigation_consulta_masiva"
+        android:title="@string/masiva" />
+
+</menu>

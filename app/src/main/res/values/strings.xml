@@ -41,5 +41,12 @@
     <string name="instruccion_leer_bin">Seleccione tipo de lectura, apunte el lector y presione el gatillo en dirección al material</string>
     <string name="leer_bin">Leer BIN</string>
     <string name="borrar_tag_confirmacion">La siguiente información será borrada del TAG</string>
+    <string name="tipo_de_marcaje">Tipo de marcaje</string>
+    <string name="unitaria">Unitaria</string>
+    <string name="masiva">Masiva</string>
+    <string name="instrucciones_consulta_masiva">Apunte lector y presione gatillo en dirección al TAG</string>
+    <string name="stockcode">Stockcode</string>
+    <string name="nombre_material">Nombre Material</string>
+    <string name="informaci_n_del_tag">Información del TAG...</string>
 
 </resources>

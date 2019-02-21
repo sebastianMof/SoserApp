@@ -1,14 +1,13 @@
-package com.acruxingenieria.soserapp.Marcaje;
+package com.acruxingenieria.soserapp.Consulta;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -16,54 +15,46 @@ import com.acruxingenieria.soserapp.R;
 
 import java.util.ArrayList;
 
-public class MarcajeLeerBinActivity extends AppCompatActivity {
+public class ConsultaUnitariaFragment extends Fragment {
+
+    View savedView;
 
     private ArrayList<String> lectorList;
     private String lectorSelected;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_marcaje_leer_bin);
+    public ConsultaUnitariaFragment() {
+        // Required empty public constructor
+    }
 
-        TextView tv_msg = (TextView) findViewById(R.id.tvMarcajeLeerBinError);
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        savedView = inflater.inflate(R.layout.fragment_consulta_unitaria, container, false);
+        setSavedView(savedView);
+
+        TextView tv_msg = (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
 
         configureLectorList();
         configureSpinnerLector();
 
-        configureButtonAtras();
-
+        return savedView;
     }
 
-    @Override
-    public void onBackPressed(){
-        finish();
+    private void setSavedView(View savedView) {
+        this.savedView=savedView;
     }
 
-    private void configureButtonAtras() {
-        Button btn_atras = (Button) findViewById(R.id.btnMarcajeLeerBinAtras);
-        btn_atras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-
-        int SCAN_BUTTON_ID = 139;
-        int SOUND_DOWN_BUTTON_ID = 25;
-        int SCAN_TRIGGER_HH = 280;
-
-        if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
-            //AGREGAR TAG
-            finish();
-        }
-
-        return super.onKeyUp(keyCode, event);
+    private View getSavedView(){
+        return savedView;
     }
 
     private void configureLectorList() {
@@ -74,9 +65,9 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
     }
 
     private void configureSpinnerLector() {
-        Spinner spn_pos = (Spinner) findViewById(R.id.spinnerMarcajeLeerBin);
+        Spinner spn_pos = (Spinner) getSavedView().findViewById(R.id.spinnerConsultaUnitaria);
 
-        ArrayAdapter<String> spnAdapter = new ArrayAdapter<String>(MarcajeLeerBinActivity.this, R.layout.spinner_item, lectorList){
+        ArrayAdapter<String> spnAdapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, lectorList){
 
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
@@ -105,6 +96,5 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
         });
 
     }
-
 
 }

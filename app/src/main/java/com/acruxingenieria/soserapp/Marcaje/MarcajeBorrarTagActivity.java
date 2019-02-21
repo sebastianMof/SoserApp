@@ -6,14 +6,36 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.R;
 
+import java.util.ArrayList;
+
 public class MarcajeBorrarTagActivity extends AppCompatActivity {
+
+    private String mUser;
+    private String positionSelected;
+    private String bodegaSelected;
+    private String tipoMarcaje;
+    //marcaje=material
+    private String marcajeMaterialNombre;
+    private String marcajeMaterialStockcode;
+    private String marcajeMaterialBin;
+    private String marcajeMaterialFechavenc;
+    private String marcajeMaterialCantidad;
+    //marcaje=bin
+    private String marcajeBinBin;
+
+    private ArrayList<String> lectorList;
+    private String lectorSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +44,11 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
         TextView tv_msg = (TextView) findViewById(R.id.tvMarcajeBorrarTagError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
+
+        configureLectorList();
+        configureSpinnerLector();
+
+        receiveDataFromIntent();
 
         configureButtonAtras();
     }
@@ -52,10 +79,69 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
         if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
             Intent intent =new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
             startActivity(intent);
-
+            finish();
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    private void receiveDataFromIntent() {
+        mUser = getIntent().getStringExtra("mUser");
+        positionSelected = getIntent().getStringExtra("positionSelected");
+        bodegaSelected = getIntent().getStringExtra("bodegaSelected");
+        tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
+        if (tipoMarcaje.equals("material")){
+            marcajeMaterialNombre = getIntent().getStringExtra("marcajeMaterialNombre");
+            marcajeMaterialStockcode = getIntent().getStringExtra("marcajeMaterialStockcode");
+            marcajeMaterialBin = getIntent().getStringExtra("marcajeMaterialBin");
+            marcajeMaterialFechavenc = getIntent().getStringExtra("marcajeMaterialFechavenc");
+            marcajeMaterialCantidad = getIntent().getStringExtra("marcajeMaterialCantidad");
+
+        } else if (tipoMarcaje.equals("bin")){
+            marcajeBinBin = getIntent().getStringExtra("marcajeBinBin");
+        }
+
+
+    }
+
+    private void configureLectorList() {
+        lectorList = new ArrayList<>();
+        lectorList.add("RFID");
+        lectorList.add("QR");
+        lectorList.add("NFC");
+    }
+
+    private void configureSpinnerLector() {
+        Spinner spn_pos = (Spinner) findViewById(R.id.spinnerMarcajeBorrarTag);
+
+        ArrayAdapter<String> spnAdapter = new ArrayAdapter<String>(MarcajeBorrarTagActivity.this, R.layout.spinner_item, lectorList){
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                tv.setTextColor(getResources().getColor(R.color.color1));
+
+                return view;
+            }
+        };
+        spnAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spn_pos.setAdapter(spnAdapter);
+
+        spn_pos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                lectorSelected =  (String) adapterView.getItemAtPosition(position);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
 }

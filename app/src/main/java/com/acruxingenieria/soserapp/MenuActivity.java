@@ -88,7 +88,6 @@ public class MenuActivity extends AppCompatActivity {
                     view.setBackgroundColor(getResources().getColor(R.color.color5));
                 }
 
-                //------
                 return view;
             }
         };
