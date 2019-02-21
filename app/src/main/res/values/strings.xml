@@ -50,5 +50,6 @@
     <string name="informaci_n_del_tag">Información del TAG...</string>
     <string name="cantidad_detectada">Cantidad detectada:</string>
     <string name="_0">0</string>
+    <string name="lectura">Lectura</string>
 
 </resources>

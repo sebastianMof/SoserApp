@@ -28,7 +28,7 @@
         <activity android:name=".Marcaje.MarcajeGrabarTagActivity" />
         <activity android:name=".Marcaje.MarcajeBorrarTagActivity" />
         <activity android:name=".Marcaje.MarcajeBorrarTagConfirmacionActivity" />
-        <activity android:name=".Marcaje.MarcajeLeerBinActivity"></activity>
+        <activity android:name=".Marcaje.MarcajeLeerBinActivity" />
     </application>
 
 </manifest>
