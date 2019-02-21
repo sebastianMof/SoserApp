@@ -48,5 +48,7 @@
     <string name="stockcode">Stockcode</string>
     <string name="nombre_material">Nombre Material</string>
     <string name="informaci_n_del_tag">Información del TAG...</string>
+    <string name="cantidad_detectada">Cantidad detectada:</string>
+    <string name="_0">0</string>
 
 </resources>
