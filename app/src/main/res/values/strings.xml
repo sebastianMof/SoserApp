@@ -51,5 +51,6 @@
     <string name="cantidad_detectada">Cantidad detectada:</string>
     <string name="_0">0</string>
     <string name="lectura">Lectura</string>
+    <string name="leyendo">Leyendo...</string>
 
 </resources>

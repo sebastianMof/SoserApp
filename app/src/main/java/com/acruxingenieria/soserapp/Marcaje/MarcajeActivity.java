@@ -1,17 +1,18 @@
 package com.acruxingenieria.soserapp.Marcaje;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import com.acruxingenieria.soserapp.MenuActivity;
 import com.acruxingenieria.soserapp.R;
 
 public class MarcajeActivity extends AppCompatActivity {
@@ -124,12 +125,13 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
 
                 } else if (binFragmentSelected){
                     EditText et_marcaje_bin_bin = (EditText) findViewById(R.id.etMarcajeBinBin);
 
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeGrabarTagActivity.class);
+
                     intent.putExtra("tipoMarcaje", "bin");
                     intent.putExtra("marcajeBinBin", et_marcaje_bin_bin.getText().toString());
 
@@ -137,7 +139,7 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, 1);
                 }
 
 
@@ -194,6 +196,20 @@ public class MarcajeActivity extends AppCompatActivity {
         positionSelected= getIntent().getStringExtra("positionSelected");
         bodegaSelected= getIntent().getStringExtra("bodegaSelected");
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String result= data.getStringExtra("result");
+                Toast.makeText(MarcajeActivity.this,result,Toast.LENGTH_LONG).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
 }

@@ -130,11 +130,11 @@ public class BodegaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(BodegaActivity.this,MenuActivity.class);
+
                 intent.putExtra("mUser", mUser);
                 intent.putExtra("positionSelected", positionSelected);
                 intent.putExtra("bodegaSelected", bodegaSelected);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -146,9 +146,19 @@ public class BodegaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(BodegaActivity.this,LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }
         });
     }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent =new Intent(BodegaActivity.this,LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
 }

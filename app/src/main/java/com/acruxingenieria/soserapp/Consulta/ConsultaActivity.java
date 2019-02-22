@@ -97,7 +97,6 @@ public class ConsultaActivity extends AppCompatActivity {
                 loadFragment(consultaMasivaLecturaFragment);
             }
 
-
         }
 
         return super.onKeyUp(keyCode, event);
@@ -124,6 +123,5 @@ public class ConsultaActivity extends AppCompatActivity {
         bodegaSelected= getIntent().getStringExtra("bodegaSelected");
 
     }
-
 
 }

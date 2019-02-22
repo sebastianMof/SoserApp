@@ -86,6 +86,11 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -213,10 +218,12 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                Intent intent =new Intent(LoginActivity.this,BodegaActivity.class);
+                Intent intent = new Intent(LoginActivity.this, BodegaActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("mUser", mUser);
                 startActivity(intent);
-                finish();
+                //finish();
+
             } else {
                 Toast.makeText(LoginActivity.this, "Revisar datos de ingreso", Toast.LENGTH_LONG).show();
             }
