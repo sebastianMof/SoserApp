@@ -10,6 +10,8 @@ import com.acruxingenieria.soserapp.R;
 
 public class MarcajeBinFragment extends Fragment {
 
+    private View savedView;
+
     public MarcajeBinFragment() {
         // Required empty public constructor
     }
@@ -24,7 +26,12 @@ public class MarcajeBinFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_marcaje_bin, container, false);
+        savedView =inflater.inflate(R.layout.fragment_marcaje_bin, container, false);
+        return savedView;
+
     }
 
+    public View getSavedView() {
+        return savedView;
+    }
 }

@@ -63,10 +63,12 @@ public class ConsultaMasivaFragment extends Fragment {
     public boolean read() {
         idLecturaMasiva = new ArrayList<>();
         RFID_IDs = new ArrayList<>();
-        initRFIDcontroller();
         try {
+            Log.e("TEST","TESTINGGGG");
             testRFID(12, 2, 15, "Yes");
+            Log.e("TEST","TESTINGGGG 222");
             idLecturaMasiva = RFID_IDs;
+            Log.e("TEST","TESTINGGGG 333");
             return true;
         } catch (Exception e){
             e.printStackTrace();
@@ -96,7 +98,7 @@ public class ConsultaMasivaFragment extends Fragment {
         rfidController.setTimeOutCount(time);
         rfidController.setPower(pwr);
 
-        if (rfidController.readSingleUiid() != null){
+        if (rfidController.readMultipleUiid() != null){
 
             //CANTIDAD TAGS ENCONTRADOS: rfidController.getArrayList().size()
             RFID_IDs= new ArrayList<>();

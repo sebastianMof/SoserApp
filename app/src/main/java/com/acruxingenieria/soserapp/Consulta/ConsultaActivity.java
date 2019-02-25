@@ -141,7 +141,6 @@ public class ConsultaActivity extends AppCompatActivity {
         mUser= getIntent().getStringExtra("mUser");
         positionSelected= getIntent().getStringExtra("positionSelected");
         bodegaSelected= getIntent().getStringExtra("bodegaSelected");
-
     }
 
     protected String getIdLecturaUnitaria(){

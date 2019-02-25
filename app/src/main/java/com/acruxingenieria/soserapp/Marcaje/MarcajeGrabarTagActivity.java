@@ -84,9 +84,9 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                     tv_msg.setText(R.string.leyendo);
 
                     testRFID(12, 2, 15, "Yes");
-                    String result = RFID_IDs.get(0);
+
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result", result);
+                    returnIntent.putExtra("tipoMarcaje", tipoMarcaje);
                     setResult(Activity.RESULT_OK, returnIntent);
 
                     //enviar lectura pot http(diferenciar bin/marcaje)
@@ -102,7 +102,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                     String result = "id-leido-por-qr";
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result", result);
+                    returnIntent.putExtra("tipoMarcaje", result);
                     setResult(Activity.RESULT_OK, returnIntent);
 
                     //enviar lectura pot http(diferenciar bin/marcaje)
@@ -116,7 +116,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                     String result = "id-leido-por-nfc";
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result", result);
+                    returnIntent.putExtra("tipoMarcaje", result);
                     setResult(Activity.RESULT_OK, returnIntent);
 
                     //enviar lectura pot http(diferenciar bin/marcaje)

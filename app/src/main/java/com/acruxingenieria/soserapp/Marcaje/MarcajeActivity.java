@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.acruxingenieria.soserapp.R;
@@ -194,6 +195,23 @@ public class MarcajeActivity extends AppCompatActivity {
         if (requestCode == 1) {//1 for GRABAR TAG
             if(resultCode == Activity.RESULT_OK){
                 Toast.makeText(MarcajeActivity.this,"Marcado exitoso",Toast.LENGTH_LONG).show();
+                View fragmentView;
+                if (data.getStringExtra("tipoMarcaje").equals("material")){
+                    fragmentView = ((MarcajeMaterialFragment)marcajeMaterialFragment).getSavedView();
+                    EditText et_nombre = fragmentView.findViewById(R.id.etMarcajeMaterialNombre);
+                    EditText et_stockcode = fragmentView.findViewById(R.id.etMarcajeMaterialStock);
+                    EditText et_fechavenc = fragmentView.findViewById(R.id.etMarcajeMaterialFechaVenc);
+                    EditText et_cantidad = fragmentView.findViewById(R.id.etMarcajeMaterialCantidad);
+                    et_nombre.setText("");
+                    et_stockcode.setText("");
+                    et_fechavenc.setText("");
+                    et_cantidad.setText("");
+                } else if (data.getStringExtra("tipoMarcaje").equals("bin")){
+                    fragmentView = ((MarcajeBinFragment)marcajeBinFragment).getSavedView();
+                    EditText et_bin = fragmentView.findViewById(R.id.etMarcajeBinBin);
+                    et_bin.setText("");
+                }
+
             }
         } else if (requestCode == 2){//2 for read BIN(from fragment)
             if(resultCode == Activity.RESULT_OK){

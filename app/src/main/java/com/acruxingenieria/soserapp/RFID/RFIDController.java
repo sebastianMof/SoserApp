@@ -3,16 +3,19 @@ package com.acruxingenieria.soserapp.RFID;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.acruxingenieria.soserapp.R;
 import com.rscja.deviceapi.RFIDWithUHF;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class RFIDController {
 
