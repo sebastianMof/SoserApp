@@ -1,9 +1,11 @@
 package com.acruxingenieria.soserapp.Marcaje;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.acruxingenieria.soserapp.R;
+import com.acruxingenieria.soserapp.RFID.RFIDController;
 
 import java.util.ArrayList;
 
@@ -33,6 +37,11 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     private String marcajeMaterialCantidad;
     //marcaje=bin
     private String marcajeBinBin;
+    //RFID
+    ArrayList<String> RFID_IDs = new ArrayList<>();
+    RFIDController rfidController;
+
+    TextView tv_msg;
 
     private ArrayList<String> lectorList;
     private String lectorSelected;
@@ -42,8 +51,10 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marcaje_borrar_tag);
 
-        TextView tv_msg = (TextView) findViewById(R.id.tvMarcajeBorrarTagError);
+        tv_msg = (TextView) findViewById(R.id.tvMarcajeBorrarTagError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
+
+        initRFIDcontroller();
 
         configureLectorList();
         configureSpinnerLector();
@@ -57,7 +68,6 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     public void onBackPressed(){
         finish();
     }
-
 
     private void configureButtonAtras() {
         Button btn_atras = (Button) findViewById(R.id.btnMarcajeBorrarTagAtras);
@@ -77,30 +87,72 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
         int SCAN_TRIGGER_HH = 280;
 
         if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
-            Intent intent =new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
-            startActivity(intent);
-            finish();
+
+            switch (lectorSelected) {
+                case "RFID": {
+                    tv_msg.setText(R.string.leyendo);
+
+                    String result ="ID";
+                    //testRFID(12, 2, 15, "Yes");
+                    //String result = RFID_IDs.get(0);
+
+                    Intent intent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
+                    intent.putExtra("code",result);
+
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
+                    startActivityForResult(intent,3);
+
+                    //finish();
+
+
+                    break;
+                }
+                case "QR": {
+                    tv_msg.setText(R.string.leyendo);
+
+                    String result = "id-leido-por-qr";
+
+                    Intent intent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
+                    intent.putExtra("code",result);
+
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
+                    finish();
+                    break;
+                }
+                case "NFC": {
+                    tv_msg.setText(R.string.leyendo);
+
+                    String result = "id-leido-por-nfc";
+
+                    Intent intent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
+                    intent.putExtra("code",result);
+
+                    intent.putExtra("mUser", mUser);
+                    intent.putExtra("positionSelected", positionSelected);
+                    intent.putExtra("bodegaSelected", bodegaSelected);
+
+                    finish();
+                    break;
+                }
+            }
+
+
         }
 
         return super.onKeyUp(keyCode, event);
     }
 
     private void receiveDataFromIntent() {
+
         mUser = getIntent().getStringExtra("mUser");
         positionSelected = getIntent().getStringExtra("positionSelected");
         bodegaSelected = getIntent().getStringExtra("bodegaSelected");
-        tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
-        if (tipoMarcaje.equals("material")){
-            marcajeMaterialNombre = getIntent().getStringExtra("marcajeMaterialNombre");
-            marcajeMaterialStockcode = getIntent().getStringExtra("marcajeMaterialStockcode");
-            marcajeMaterialBin = getIntent().getStringExtra("marcajeMaterialBin");
-            marcajeMaterialFechavenc = getIntent().getStringExtra("marcajeMaterialFechavenc");
-            marcajeMaterialCantidad = getIntent().getStringExtra("marcajeMaterialCantidad");
-
-        } else if (tipoMarcaje.equals("bin")){
-            marcajeBinBin = getIntent().getStringExtra("marcajeBinBin");
-        }
-
 
     }
 
@@ -142,6 +194,31 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //RFID METHODS
+    private void initRFIDcontroller(){
+        rfidController = new RFIDController(MarcajeBorrarTagActivity.this);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 3) {//3 for DELETE
+            if(resultCode == Activity.RESULT_OK){
+
+                String result= data.getStringExtra("result");
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("result", result);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
 }

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -74,6 +75,12 @@ public class MarcajeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     //REPLACE FRAGMENT METHOD
@@ -153,39 +160,22 @@ public class MarcajeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (materialFragmentSelected){
-                    EditText et_marcaje_material_nombre = (EditText) findViewById(R.id.etMarcajeMaterialNombre);
-                    EditText et_marcaje_material_stockcode = (EditText) findViewById(R.id.etMarcajeMaterialStock);
-                    EditText et_marcaje_material_bin = (EditText) findViewById(R.id.etMarcajeMaterialBin);
-                    EditText et_marcaje_material_fechavenc = (EditText) findViewById(R.id.etMarcajeMaterialFechaVenc);
-                    EditText et_marcaje_material_cantidad = (EditText) findViewById(R.id.etMarcajeMaterialCantidad);
-
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
-
-                    intent.putExtra("tipoMarcaje", "material");
-                    intent.putExtra("marcajeMaterialNombre", et_marcaje_material_nombre.getText().toString());
-                    intent.putExtra("marcajeMaterialStockcode", et_marcaje_material_stockcode.getText().toString());
-                    intent.putExtra("marcajeMaterialBin", et_marcaje_material_bin.getText().toString());
-                    intent.putExtra("marcajeMaterialFechavenc", et_marcaje_material_fechavenc.getText().toString());
-                    intent.putExtra("marcajeMaterialCantidad", et_marcaje_material_cantidad.getText().toString());
 
                     intent.putExtra("mUser", mUser);
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
 
-                    startActivity(intent);
+                    startActivityForResult(intent,3);
 
                 } else if (binFragmentSelected){
-                    EditText et_marcaje_bin_bin = (EditText) findViewById(R.id.etMarcajeBinBin);
-
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
-                    intent.putExtra("tipoMarcaje", "bin");
-                    intent.putExtra("marcajeBinBin", et_marcaje_bin_bin.getText().toString());
 
                     intent.putExtra("mUser", mUser);
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
 
-                    startActivity(intent);
+                    startActivityForResult(intent,3);
                 }
             }
         });
@@ -201,10 +191,27 @@ public class MarcajeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 1) {
+        if (requestCode == 1) {//1 for GRABAR TAG
             if(resultCode == Activity.RESULT_OK){
                 String result= data.getStringExtra("result");
-                Toast.makeText(MarcajeActivity.this,result,Toast.LENGTH_LONG).show();
+                Toast.makeText(MarcajeActivity.this,"Marcado exitoso\n"+result,Toast.LENGTH_LONG).show();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        } else if (requestCode == 2){//2 for read BIN(from fragment)
+            if(resultCode == Activity.RESULT_OK){
+                String result= data.getStringExtra("result");
+                ((MarcajeMaterialFragment)marcajeMaterialFragment).setReadedBIN(result);
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        } else if (requestCode == 3){//3 for DELETE
+            Log.e("TEST","resultcode"+Integer.toString(resultCode));
+            if(resultCode == Activity.RESULT_OK){
+                Toast.makeText(MarcajeActivity.this,"Borrado exitoso",Toast.LENGTH_LONG).show();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result

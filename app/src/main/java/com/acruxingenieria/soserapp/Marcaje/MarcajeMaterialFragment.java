@@ -7,21 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.acruxingenieria.soserapp.R;
+
+import java.util.Objects;
 
 public class MarcajeMaterialFragment extends Fragment {
 
     View savedView;
+    private String readedBIN;
 
     public MarcajeMaterialFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -31,8 +29,14 @@ public class MarcajeMaterialFragment extends Fragment {
         savedView =inflater.inflate(R.layout.fragment_marcaje_material, container, false);
         setSavedView(savedView);
         configureButtonLeerBin();
-
         return savedView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EditText et_bin = (EditText) getSavedView().findViewById(R.id.etMarcajeMaterialBin);
+        et_bin.setText(readedBIN);
     }
 
     private void configureButtonLeerBin() {
@@ -42,7 +46,7 @@ public class MarcajeMaterialFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(getActivity(),MarcajeLeerBinActivity.class);
-                startActivity(intent);
+                Objects.requireNonNull(getActivity()).startActivityForResult(intent,2);
 
             }
         });
@@ -56,5 +60,8 @@ public class MarcajeMaterialFragment extends Fragment {
         return savedView;
     }
 
+    public void setReadedBIN(String readedBIN){
+        this.readedBIN=readedBIN;
+    }
 
 }

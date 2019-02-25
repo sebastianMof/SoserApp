@@ -1,8 +1,12 @@
 package com.acruxingenieria.soserapp.Marcaje;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +19,15 @@ import android.widget.TextView;
 import com.acruxingenieria.soserapp.R;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MarcajeLeerBinActivity extends AppCompatActivity {
 
     private ArrayList<String> lectorList;
     private String lectorSelected;
+
+    private String readedBIN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +68,12 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
 
         if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
             //AGREGAR TAG
+            readedBIN = "readedBIN";
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("result", readedBIN);
+            setResult(Activity.RESULT_OK, returnIntent);
+
             finish();
         }
 
@@ -105,6 +119,5 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
         });
 
     }
-
 
 }
