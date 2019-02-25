@@ -193,11 +193,7 @@ public class MarcajeActivity extends AppCompatActivity {
 
         if (requestCode == 1) {//1 for GRABAR TAG
             if(resultCode == Activity.RESULT_OK){
-                String result= data.getStringExtra("result");
-                Toast.makeText(MarcajeActivity.this,"Marcado exitoso\n"+result,Toast.LENGTH_LONG).show();
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
+                Toast.makeText(MarcajeActivity.this,"Marcado exitoso",Toast.LENGTH_LONG).show();
             }
         } else if (requestCode == 2){//2 for read BIN(from fragment)
             if(resultCode == Activity.RESULT_OK){
@@ -205,16 +201,9 @@ public class MarcajeActivity extends AppCompatActivity {
                 ((MarcajeMaterialFragment)marcajeMaterialFragment).setReadedBIN(result);
 
             }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
         } else if (requestCode == 3){//3 for DELETE
-            Log.e("TEST","resultcode"+Integer.toString(resultCode));
             if(resultCode == Activity.RESULT_OK){
                 Toast.makeText(MarcajeActivity.this,"Borrado exitoso",Toast.LENGTH_LONG).show();
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
             }
         }
     }

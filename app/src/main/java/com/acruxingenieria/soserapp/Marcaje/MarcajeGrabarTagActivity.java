@@ -83,9 +83,8 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                 case "RFID": {
                     tv_msg.setText(R.string.leyendo);
 
-                    //testRFID(12, 2, 15, "Yes");
-                    //String result = RFID_IDs.get(0);
-                    String result = "readedTAG";
+                    testRFID(12, 2, 15, "Yes");
+                    String result = RFID_IDs.get(0);
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("result", result);
                     setResult(Activity.RESULT_OK, returnIntent);

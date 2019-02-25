@@ -92,9 +92,8 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                 case "RFID": {
                     tv_msg.setText(R.string.leyendo);
 
-                    String result ="ID";
-                    //testRFID(12, 2, 15, "Yes");
-                    //String result = RFID_IDs.get(0);
+                    testRFID(12, 2, 15, "Yes");
+                    String result = RFID_IDs.get(0);
 
                     Intent intent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
                     intent.putExtra("code",result);
@@ -200,6 +199,32 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     private void initRFIDcontroller(){
         rfidController = new RFIDController(MarcajeBorrarTagActivity.this);
 
+    }
+    public void testBeep(){
+        rfidController.beepEnable=true;
+        rfidController.doBeep();
+    }
+    public void testRFID (int pwr, int time, int filter, String toggleCount){
+
+        rfidController.filterValue = filter;
+        rfidController.toggleCount = toggleCount;
+        rfidController.setTimeOutCount(time);
+        rfidController.setPower(pwr);
+
+        if (rfidController.readSingleUiid() != null){
+
+            //CANTIDAD TAGS ENCONTRADOS: rfidController.getArrayList().size()
+            RFID_IDs= new ArrayList<>();
+
+            for (RFIDController.UUID n : rfidController.getArrayList()){
+                RFID_IDs.add(n.getUuid());//LISTA CON LOS ENCONTRADOS
+            }
+
+            initRFIDcontroller();//clear the last time
+            testBeep();
+        }else {
+            // PRINT NO SE ENCONTRARON TAGS
+        }
     }
 
     @Override

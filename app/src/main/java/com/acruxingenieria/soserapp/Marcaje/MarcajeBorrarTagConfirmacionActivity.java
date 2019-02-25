@@ -42,7 +42,8 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
         /*
         codeID, mUser, positionSelected, bodegaSelected --> DATA;
         */
-        DATA = "Información del TAG";
+        DATA = codeID + "\n";
+        DATA+= "Información del TAG...";
     }
 
     private void showEraseData() {
@@ -62,7 +63,7 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //DELETE METHOD
 
-                String result = "readedTAG";
+                String result = codeID;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", result);
                 setResult(Activity.RESULT_OK, returnIntent);

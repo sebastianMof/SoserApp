@@ -2,11 +2,9 @@ package com.acruxingenieria.soserapp.Marcaje;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +15,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.R;
+import com.acruxingenieria.soserapp.RFID.RFIDController;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class MarcajeLeerBinActivity extends AppCompatActivity {
 
@@ -29,6 +26,10 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
 
     private String readedBIN;
 
+    //RFID
+    ArrayList<String> RFID_IDs = new ArrayList<>();
+    RFIDController rfidController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +37,8 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
 
         TextView tv_msg = (TextView) findViewById(R.id.tvMarcajeLeerBinError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
+
+        initRFIDcontroller();
 
         configureLectorList();
         configureSpinnerLector();
@@ -67,8 +70,9 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
         int SCAN_TRIGGER_HH = 280;
 
         if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
-            //AGREGAR TAG
-            readedBIN = "readedBIN";
+
+            testRFID(12, 2, 15, "Yes");
+            readedBIN = RFID_IDs.get(0);
 
             Intent returnIntent = new Intent();
             returnIntent.putExtra("result", readedBIN);
@@ -118,6 +122,38 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //RFID METHODS
+    private void initRFIDcontroller(){
+        rfidController = new RFIDController(MarcajeLeerBinActivity.this);
+
+    }
+    public void testBeep(){
+        rfidController.beepEnable=true;
+        rfidController.doBeep();
+    }
+    public void testRFID (int pwr, int time, int filter, String toggleCount){
+
+        rfidController.filterValue = filter;
+        rfidController.toggleCount = toggleCount;
+        rfidController.setTimeOutCount(time);
+        rfidController.setPower(pwr);
+
+        if (rfidController.readSingleUiid() != null){
+
+            //CANTIDAD TAGS ENCONTRADOS: rfidController.getArrayList().size()
+            RFID_IDs= new ArrayList<>();
+
+            for (RFIDController.UUID n : rfidController.getArrayList()){
+                RFID_IDs.add(n.getUuid());//LISTA CON LOS ENCONTRADOS
+            }
+
+            initRFIDcontroller();//clear the last time
+            testBeep();
+        }else {
+            // PRINT NO SE ENCONTRARON TAGS
+        }
     }
 
 }
