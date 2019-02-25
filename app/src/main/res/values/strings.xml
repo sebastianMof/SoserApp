@@ -52,5 +52,5 @@
     <string name="_0">0</string>
     <string name="lectura">Lectura</string>
     <string name="leyendo">Leyendo...</string>
-
+    <string name="lectura_fallida">Lectura fallida, intentar de nuevo</string>
 </resources>

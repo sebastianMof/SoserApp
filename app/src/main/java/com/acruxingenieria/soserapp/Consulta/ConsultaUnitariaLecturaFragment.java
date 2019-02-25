@@ -9,9 +9,15 @@ import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.R;
 
+import java.util.Objects;
+
 public class ConsultaUnitariaLecturaFragment extends Fragment {
 
     private View savedView;
+    private String idLecturaUnitaria;
+    private String stockcode;
+    private String nombre;
+    private String info;
 
     public ConsultaUnitariaLecturaFragment() {
         // Required empty public constructor
@@ -30,6 +36,10 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         savedView = inflater.inflate(R.layout.fragment_consulta_unitaria_lectura, container, false);
         setSavedView(savedView);
 
+        setID(((ConsultaActivity)Objects.requireNonNull(getActivity())).getIdLecturaUnitaria());
+
+        queryByID(idLecturaUnitaria);
+
         configureStockcodeTextView();
         configureNombreTextView();
         configureTagInfoTextView();
@@ -37,16 +47,26 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         return savedView;
     }
 
+    private void queryByID(String id) {
+        //Acá hay que hacer la query para el ID dado, lo siquiente es temporal
+        stockcode = "stockcode_"+id;
+        nombre = "nombre_"+id;
+        info = "info_"+id;
+    }
+
     private void configureStockcodeTextView() {
         TextView tv_stockcode= (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaLecturaStockcode);
+        tv_stockcode.setText(stockcode);
     }
 
     private void configureNombreTextView() {
         TextView tv_nombre= (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaLecturaNombre);
+        tv_nombre.setText(nombre);
     }
 
     private void configureTagInfoTextView() {
         TextView tv_tag_info= (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaLecturaInfo);
+        tv_tag_info.setText(info);
     }
 
     private void setSavedView(View savedView) {
@@ -57,4 +77,7 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         return savedView;
     }
 
+    public void setID(String idLecturaUnitaria) {
+        this.idLecturaUnitaria = idLecturaUnitaria;
+    }
 }

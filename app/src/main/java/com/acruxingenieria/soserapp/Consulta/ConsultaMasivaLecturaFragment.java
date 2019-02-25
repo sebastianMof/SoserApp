@@ -1,9 +1,5 @@
 package com.acruxingenieria.soserapp.Consulta;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -14,12 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.acruxingenieria.soserapp.Marcaje.MarcajeActivity;
-import com.acruxingenieria.soserapp.MenuActivity;
 import com.acruxingenieria.soserapp.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ConsultaMasivaLecturaFragment extends Fragment {
 
@@ -69,22 +65,7 @@ public class ConsultaMasivaLecturaFragment extends Fragment {
     }
 
     private void configureLecturaMasivaItems() {
-        lecturaMasivaItems=new ArrayList<String>();
-        //method to get de items according to data received and replace this
-        lecturaMasivaItems.add("LECTURA_1");
-        lecturaMasivaItems.add("LECTURA_2");
-        lecturaMasivaItems.add("LECTURA_3");
-        lecturaMasivaItems.add("LECTURA_4");
-        lecturaMasivaItems.add("LECTURA_5");
-        lecturaMasivaItems.add("LECTURA_6");
-        lecturaMasivaItems.add("LECTURA_7");
-        lecturaMasivaItems.add("LECTURA_8");
-        lecturaMasivaItems.add("LECTURA_9");
-        lecturaMasivaItems.add("LECTURA_10");
-        lecturaMasivaItems.add("LECTURA_11");
-        lecturaMasivaItems.add("LECTURA_12");
-        lecturaMasivaItems.add("LECTURA_13");
-        lecturaMasivaItems.add("LECTURA_14");
+        lecturaMasivaItems=((ConsultaActivity)Objects.requireNonNull(getActivity())).getIdLecturaMasiva();
     }
 
     private void configureLecturaMasivaListView() {
@@ -113,14 +94,9 @@ public class ConsultaMasivaLecturaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                switch (adapterView.getItemAtPosition(i).toString()) {
+                Toast.makeText(getActivity(),adapterView.getItemAtPosition(i).toString(),Toast.LENGTH_LONG).show();
 
-                    case ("LECTURA_1"):
-                    break;
-                    case ("LECTURA_2"):
-                    break;
-
-                }
+                //Desplegar info para id = adapterView.getItemAtPosition(i).toString();
             }
         });
     }

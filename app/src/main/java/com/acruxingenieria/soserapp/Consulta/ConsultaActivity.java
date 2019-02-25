@@ -9,14 +9,20 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.R;
+
+import java.util.ArrayList;
 
 public class ConsultaActivity extends AppCompatActivity {
 
     private String mUser;
     private String positionSelected;
     private String bodegaSelected;
+
+    private String idLecturaUnitaria;
+    private ArrayList<String> idLecturaMasiva;
 
     private Fragment consultaUnitariaFragment = new ConsultaUnitariaFragment();
     private Fragment consultaMasivaFragment = new ConsultaMasivaFragment();
@@ -90,11 +96,25 @@ public class ConsultaActivity extends AppCompatActivity {
         if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
             //AGREGAR TAG
             if (consultaUnitariaSelected){
-                //lectura unitaria aquí
-                loadFragment(consultaUnitariaLecturaFragment);
+                if ( ((ConsultaUnitariaFragment)consultaUnitariaFragment).read()){
+                    idLecturaUnitaria = ((ConsultaUnitariaFragment)consultaUnitariaFragment).getIdLecturaUnitaria();
+
+                    loadFragment(consultaUnitariaLecturaFragment);
+                } else {
+                    TextView tv_msg = (TextView) ((ConsultaUnitariaFragment)consultaUnitariaFragment).getSavedView().findViewById(R.id.tvConsultaUnitariaError);
+                    tv_msg.setText(R.string.lectura_fallida);
+                }
+
             } else if (consultaMasivaSelected){
-                //lectura masiva acá
-                loadFragment(consultaMasivaLecturaFragment);
+                if ( ((ConsultaMasivaFragment)consultaMasivaFragment).read()){
+                    idLecturaMasiva = ((ConsultaMasivaFragment)consultaMasivaFragment).getIdLecturaMasiva();
+
+                    loadFragment(consultaMasivaLecturaFragment);
+                } else {
+                    TextView tv_msg = (TextView) ((ConsultaMasivaFragment)consultaMasivaFragment).getSavedView().findViewById(R.id.tvConsultaMasivaError);
+                    tv_msg.setText(R.string.lectura_fallida);
+                }
+
             }
 
         }
@@ -122,6 +142,14 @@ public class ConsultaActivity extends AppCompatActivity {
         positionSelected= getIntent().getStringExtra("positionSelected");
         bodegaSelected= getIntent().getStringExtra("bodegaSelected");
 
+    }
+
+    protected String getIdLecturaUnitaria(){
+        return idLecturaUnitaria;
+    }
+
+    protected ArrayList<String> getIdLecturaMasiva(){
+        return idLecturaMasiva;
     }
 
 }

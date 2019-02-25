@@ -19,6 +19,8 @@ public class ConsultaUnitariaFragment extends Fragment {
 
     View savedView;
 
+    private String idLecturaUnitaria;
+
     private ArrayList<String> lectorList;
     private String lectorSelected;
 
@@ -53,7 +55,7 @@ public class ConsultaUnitariaFragment extends Fragment {
         this.savedView=savedView;
     }
 
-    private View getSavedView(){
+    public View getSavedView(){
         return savedView;
     }
 
@@ -95,6 +97,28 @@ public class ConsultaUnitariaFragment extends Fragment {
             }
         });
 
+    }
+
+    //METODO QUE RETORNA SI LA LECTURA ES EXITOSA, EN CASO DE EXITO GUARDA EL ID LEIDO
+    public boolean read(){
+        switch (lectorSelected) {
+            case "RFID":
+                idLecturaUnitaria = "ID_readed_by_RFID";
+                return true;
+            case "QR":
+                idLecturaUnitaria = "ID_readed_by_QR";
+                return true;
+            case "NFC":
+                idLecturaUnitaria = "ID_readed_by_NFC";
+                return true;
+        }
+
+        return false;
+
+    }
+
+    public String getIdLecturaUnitaria(){
+        return idLecturaUnitaria;
     }
 
 }
