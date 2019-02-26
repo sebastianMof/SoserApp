@@ -191,7 +191,6 @@ public class MarcajeActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (requestCode == 1) {//1 for GRABAR TAG
             if(resultCode == Activity.RESULT_OK){
                 Toast.makeText(MarcajeActivity.this,"Marcado exitoso",Toast.LENGTH_LONG).show();

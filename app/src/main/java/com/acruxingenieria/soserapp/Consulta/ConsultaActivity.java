@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,18 +17,10 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 
-import com.acruxingenieria.soserapp.Marcaje.MarcajeActivity;
-import com.acruxingenieria.soserapp.Marcaje.MarcajeBinFragment;
-import com.acruxingenieria.soserapp.Marcaje.MarcajeMaterialFragment;
+import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.R;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -42,7 +35,9 @@ public class ConsultaActivity extends AppCompatActivity {
     private String idLecturaMasivaSelected;
 
     private boolean qrReadingDone = false;
-    private boolean nfcSelected = false;
+
+    //QR
+    private boolean hasQRbuiltIn;
 
     //NFC
     private NfcAdapter mNfcAdapter;
@@ -89,6 +84,9 @@ public class ConsultaActivity extends AppCompatActivity {
         //navBar
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationConsulta);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+        //hasQRbuiltIn = qrBuiltInActivity.hasQRLector();
 
         receiveDataFromIntent();
 
@@ -218,7 +216,14 @@ public class ConsultaActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 4) {//4 for QR unitaria
+        if (requestCode == 4) {//4 for QR unitaria qr cam
+            if(resultCode == Activity.RESULT_OK){
+                idLecturaUnitaria = data.getStringExtra("QR_ID");
+                qrReadingDone = true;
+
+            }
+        }
+        if (requestCode == 5) {//5 for QR unitaria built in
             if(resultCode == Activity.RESULT_OK){
                 idLecturaUnitaria = data.getStringExtra("QR_ID");
                 qrReadingDone = true;
@@ -227,7 +232,7 @@ public class ConsultaActivity extends AppCompatActivity {
         }
     }
 
-    public void displayQrCamInfo(){
+    public void displayQrInfo(){
         if (idLecturaUnitaria !=null)
             loadFragment(consultaUnitariaLecturaFragment);
 
@@ -245,7 +250,7 @@ public class ConsultaActivity extends AppCompatActivity {
 
         //QR
         if (consultaUnitariaSelected && qrReadingDone){
-            displayQrCamInfo();
+            displayQrInfo();
             qrReadingDone = false;
         }
 
@@ -260,7 +265,6 @@ public class ConsultaActivity extends AppCompatActivity {
         if (mNfcAdapter != null)
             mNfcAdapter.enableForegroundDispatch(this, pendingIntent, nfcIntentFilter, null);
     }
-
 
 
     //NFC
@@ -314,6 +318,10 @@ public class ConsultaActivity extends AppCompatActivity {
         if(mNfcAdapter!= null){
             mNfcAdapter.disableForegroundDispatch(ConsultaActivity.this);
         }
+    }
+
+    public boolean hasQRbuiltIn() {
+        return hasQRbuiltIn;
     }
 
 }

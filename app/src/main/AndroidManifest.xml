@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.acruxingenieria.soserapp">
 
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -35,7 +34,8 @@
         <activity android:name=".Marcaje.MarcajeBorrarTagActivity" />
         <activity android:name=".Marcaje.MarcajeBorrarTagConfirmacionActivity" />
         <activity android:name=".Marcaje.MarcajeLeerBinActivity" />
-        <activity android:name=".QR.QrCamActivity"></activity>
+        <activity android:name=".QR.QrCamActivity" />
+        <activity android:name=".QR.QrBuiltInActivity"></activity>
     </application>
 
 </manifest>

@@ -105,7 +105,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
                     break;
                 }
-                case "com/acruxingenieria/soserapp/QR": {
+                case "QR": {
                     tv_msg.setText(R.string.leyendo);
 
                     String result = "id-leido-por-qr";
@@ -154,7 +154,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     private void configureLectorList() {
         lectorList = new ArrayList<>();
         lectorList.add("RFID");
-        lectorList.add("com/acruxingenieria/soserapp/QR");
+        lectorList.add("QR");
         lectorList.add("NFC");
     }
 

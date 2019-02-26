@@ -31,6 +31,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 

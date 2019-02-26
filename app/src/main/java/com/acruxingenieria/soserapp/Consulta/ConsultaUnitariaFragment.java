@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
@@ -32,6 +33,9 @@ public class ConsultaUnitariaFragment extends Fragment {
     private ArrayList<String> lectorList;
     private String lectorSelected;
 
+    //QR
+    private boolean hasQRbuiltIn = false;
+
     public ConsultaUnitariaFragment() {
         // Required empty public constructor
     }
@@ -40,6 +44,7 @@ public class ConsultaUnitariaFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hasQRbuiltIn = ((ConsultaActivity)Objects.requireNonNull(getActivity())).hasQRbuiltIn();
 
     }
 
@@ -126,16 +131,33 @@ public class ConsultaUnitariaFragment extends Fragment {
                 return true;
             case "QR":
                 idLecturaUnitaria = "ID_readed_by_QR";
-                Intent intent = new Intent(getActivity(), QrCamActivity.class);
-                Objects.requireNonNull(getActivity()).startActivityForResult(intent, 4);
-
+                openQRreading();
                 return true;
             case "NFC":
                 return true;
         }
 
         return false;
+    }
 
+    //QR
+    protected void openQRreading(){
+        if (hasQRbuiltIn){
+            openQRLector();
+        } else {
+            openCamQR();
+        }
+
+    }
+    //QR
+    protected void openCamQR(){
+        Intent intent = new Intent(getActivity(), QrCamActivity.class);
+        Objects.requireNonNull(getActivity()).startActivityForResult(intent, 4);
+    }
+    //QR HH
+    protected void openQRLector(){
+        Intent intent = new Intent(getActivity(), QrBuiltInActivity.class);
+        Objects.requireNonNull(getActivity()).startActivityForResult(intent, 5);
     }
 
     public String getIdLecturaUnitaria(){

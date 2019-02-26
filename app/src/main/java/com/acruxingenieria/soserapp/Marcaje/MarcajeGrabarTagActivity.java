@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +15,13 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
+import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
@@ -92,18 +96,15 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
                     break;
                 }
-                case "com/acruxingenieria/soserapp/QR": {
+                case "QR": {
                     tv_msg.setText(R.string.leyendo);
 
                     String result = "id-leido-por-qr";
 
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("tipoMarcaje", result);
-                    setResult(Activity.RESULT_OK, returnIntent);
+                    openQRreading();
 
                     //enviar lectura pot http(diferenciar bin/marcaje)
 
-                    finish();
                     break;
                 }
                 case "NFC": {
@@ -141,7 +142,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     private void configureLectorList() {
         lectorList = new ArrayList<>();
         lectorList.add("RFID");
-        lectorList.add("com/acruxingenieria/soserapp/QR");
+        lectorList.add("QR");
         lectorList.add("NFC");
     }
 
@@ -225,5 +226,42 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
         }else {
             // PRINT NO SE ENCONTRARON TAGS
         }
+    }
+
+    //QR
+    protected void openQRreading(){
+        openQRLector();
+        /*
+        if (hasQRbuiltIn){
+            openQRLector();
+        } else {
+            openCamQR();
+        }*/
+
+    }
+    //QR
+    protected void openCamQR(){
+        Intent intent = new Intent(MarcajeGrabarTagActivity.this, QrCamActivity.class);
+        startActivityForResult(intent, 1);
+    }
+    //QR HH
+    protected void openQRLector(){
+        Intent intent = new Intent(MarcajeGrabarTagActivity.this, QrBuiltInActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {//4 for QR unitaria qr cam
+            if(resultCode == Activity.RESULT_OK){
+                Intent returnIntent = new Intent();
+                //MARCAR data.getStringExtra("QR_ID") y si hay exito retornar con result_ok
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+
+            }
+        }
+
     }
 }
