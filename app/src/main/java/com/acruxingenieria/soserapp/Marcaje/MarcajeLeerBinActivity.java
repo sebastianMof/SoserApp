@@ -87,7 +87,7 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
     private void configureLectorList() {
         lectorList = new ArrayList<>();
         lectorList.add("RFID");
-        lectorList.add("QR");
+        lectorList.add("com/acruxingenieria/soserapp/QR");
         lectorList.add("NFC");
     }
 

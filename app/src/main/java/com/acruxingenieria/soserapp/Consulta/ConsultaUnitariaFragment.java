@@ -1,5 +1,6 @@
 package com.acruxingenieria.soserapp.Consulta;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -11,11 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.acruxingenieria.soserapp.Marcaje.MarcajeGrabarTagActivity;
+import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ConsultaUnitariaFragment extends Fragment {
 
@@ -77,6 +79,7 @@ public class ConsultaUnitariaFragment extends Fragment {
         lectorList.add("RFID");
         lectorList.add("QR");
         lectorList.add("NFC");
+
     }
 
     private void configureSpinnerLector() {
@@ -123,9 +126,11 @@ public class ConsultaUnitariaFragment extends Fragment {
                 return true;
             case "QR":
                 idLecturaUnitaria = "ID_readed_by_QR";
+                Intent intent = new Intent(getActivity(), QrCamActivity.class);
+                Objects.requireNonNull(getActivity()).startActivityForResult(intent, 4);
+
                 return true;
             case "NFC":
-                idLecturaUnitaria = "ID_readed_by_NFC";
                 return true;
         }
 
@@ -135,6 +140,10 @@ public class ConsultaUnitariaFragment extends Fragment {
 
     public String getIdLecturaUnitaria(){
         return idLecturaUnitaria;
+    }
+
+    public void setIdLecturaUnitaria(String idLecturaUnitaria){
+        this.idLecturaUnitaria=idLecturaUnitaria;
     }
 
     //RFID METHODS
@@ -162,11 +171,14 @@ public class ConsultaUnitariaFragment extends Fragment {
                 RFID_IDs.add(n.getUuid());//LISTA CON LOS ENCONTRADOS
             }
 
-            initRFIDcontroller();//clear the last time
             testBeep();
         }else {
             // PRINT NO SE ENCONTRARON TAGS
         }
+    }
+
+    public String getLectorSelected(){
+        return lectorSelected;
     }
 
 }

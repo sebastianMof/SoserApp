@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
@@ -109,7 +105,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
                     break;
                 }
-                case "QR": {
+                case "com/acruxingenieria/soserapp/QR": {
                     tv_msg.setText(R.string.leyendo);
 
                     String result = "id-leido-por-qr";
@@ -158,7 +154,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     private void configureLectorList() {
         lectorList = new ArrayList<>();
         lectorList.add("RFID");
-        lectorList.add("QR");
+        lectorList.add("com/acruxingenieria/soserapp/QR");
         lectorList.add("NFC");
     }
 
