@@ -94,9 +94,7 @@ public class ConsultaMasivaLecturaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Toast.makeText(getActivity(),adapterView.getItemAtPosition(i).toString(),Toast.LENGTH_LONG).show();
-
-                //Desplegar info para id = adapterView.getItemAtPosition(i).toString();
+                ((ConsultaActivity)Objects.requireNonNull(getActivity())).loadConsultaMasivaInfoFragment(adapterView.getItemAtPosition(i).toString());
             }
         });
     }

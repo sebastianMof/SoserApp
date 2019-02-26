@@ -53,4 +53,5 @@
     <string name="lectura">Lectura</string>
     <string name="leyendo">Leyendo...</string>
     <string name="lectura_fallida">Lectura fallida, intentar de nuevo</string>
+    <string name="tag_no_encontrado">No se encontró TAG</string>
 </resources>

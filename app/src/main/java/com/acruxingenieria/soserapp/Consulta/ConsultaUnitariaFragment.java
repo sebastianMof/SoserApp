@@ -67,6 +67,11 @@ public class ConsultaUnitariaFragment extends Fragment {
         return savedView;
     }
 
+    public void showError() {
+        TextView tv_msg = (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaError);
+        tv_msg.setText(R.string.lectura_fallida);
+    }
+
     private void configureLectorList() {
         lectorList = new ArrayList<>();
         lectorList.add("RFID");
@@ -112,7 +117,9 @@ public class ConsultaUnitariaFragment extends Fragment {
         switch (lectorSelected) {
             case "RFID":
                 testRFID(12, 2, 15, "Yes");
-                idLecturaUnitaria = RFID_IDs.get(0);
+                if (RFID_IDs.size()>=1)
+                    idLecturaUnitaria = RFID_IDs.get(0);
+                else idLecturaUnitaria = null;
                 return true;
             case "QR":
                 idLecturaUnitaria = "ID_readed_by_QR";

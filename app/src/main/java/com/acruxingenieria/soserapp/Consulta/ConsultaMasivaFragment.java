@@ -64,11 +64,8 @@ public class ConsultaMasivaFragment extends Fragment {
         idLecturaMasiva = new ArrayList<>();
         RFID_IDs = new ArrayList<>();
         try {
-            Log.e("TEST","TESTINGGGG");
             testRFID(12, 2, 15, "Yes");
-            Log.e("TEST","TESTINGGGG 222");
             idLecturaMasiva = RFID_IDs;
-            Log.e("TEST","TESTINGGGG 333");
             return true;
         } catch (Exception e){
             e.printStackTrace();

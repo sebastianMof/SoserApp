@@ -23,11 +23,13 @@ public class ConsultaActivity extends AppCompatActivity {
 
     private String idLecturaUnitaria;
     private ArrayList<String> idLecturaMasiva;
+    private String idLecturaMasivaSelected;
 
     private Fragment consultaUnitariaFragment = new ConsultaUnitariaFragment();
-    private Fragment consultaMasivaFragment = new ConsultaMasivaFragment();
     private Fragment consultaUnitariaLecturaFragment = new ConsultaUnitariaLecturaFragment();
+    private Fragment consultaMasivaFragment = new ConsultaMasivaFragment();
     private Fragment consultaMasivaLecturaFragment = new ConsultaMasivaLecturaFragment();
+    private Fragment consultaMasivaLecturaInfoFragment = new ConsultaMasivaLecturaInfoFragment();
     private boolean consultaUnitariaSelected = false;
     private boolean consultaMasivaSelected = false;
 
@@ -85,6 +87,22 @@ public class ConsultaActivity extends AppCompatActivity {
         }
         return false;
     }
+    public boolean loadConsultaMasivaInfoFragment(String idSelected) {
+
+        idLecturaMasivaSelected = idSelected;
+        if (consultaMasivaLecturaInfoFragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.consulta_fragment_container, consultaMasivaLecturaInfoFragment)
+                    .commit();
+            return true;
+        }
+        return false;
+    }
+
+    public String getIdLecturaMasivaSelected(){
+        return idLecturaMasivaSelected;
+    }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -98,11 +116,11 @@ public class ConsultaActivity extends AppCompatActivity {
             if (consultaUnitariaSelected){
                 if ( ((ConsultaUnitariaFragment)consultaUnitariaFragment).read()){
                     idLecturaUnitaria = ((ConsultaUnitariaFragment)consultaUnitariaFragment).getIdLecturaUnitaria();
-
-                    loadFragment(consultaUnitariaLecturaFragment);
+                    if (idLecturaUnitaria !=null)
+                        loadFragment(consultaUnitariaLecturaFragment);
+                    else ((ConsultaUnitariaFragment)consultaUnitariaFragment).showError();
                 } else {
-                    TextView tv_msg = (TextView) ((ConsultaUnitariaFragment)consultaUnitariaFragment).getSavedView().findViewById(R.id.tvConsultaUnitariaError);
-                    tv_msg.setText(R.string.lectura_fallida);
+                    ((ConsultaUnitariaFragment)consultaUnitariaFragment).showError();
                 }
 
             } else if (consultaMasivaSelected){
@@ -114,11 +132,8 @@ public class ConsultaActivity extends AppCompatActivity {
                     TextView tv_msg = (TextView) ((ConsultaMasivaFragment)consultaMasivaFragment).getSavedView().findViewById(R.id.tvConsultaMasivaError);
                     tv_msg.setText(R.string.lectura_fallida);
                 }
-
             }
-
         }
-
         return super.onKeyUp(keyCode, event);
     }
 
