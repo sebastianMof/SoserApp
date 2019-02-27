@@ -231,7 +231,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
     //QR
     protected void openQRreading(){
-        openQRLector();
+        openCamQR();
         /*
         if (hasQrBuiltIn){
             openQRLector();

@@ -146,7 +146,7 @@ public class ConsultaUnitariaFragment extends Fragment {
 
     //QR
     protected void openQRreading(){
-        openQRLector();
+        openCamQR();
         /*
         if (hasQRbuiltIn){
             openQRLector();

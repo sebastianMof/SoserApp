@@ -53,7 +53,8 @@ public class QrCamActivity extends AppCompatActivity implements ZXingScannerView
     public void handleResult(Result rawResult) {
 
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("QR_ID",rawResult.getText());
+        returnIntent.putExtra("ID",rawResult.getText());
+        returnIntent.putExtra("lectorSelected","QR");git
         setResult(Activity.RESULT_OK,returnIntent);
         mScannerView.stopCamera();
         super.onBackPressed();

@@ -201,7 +201,7 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
 
     //QR
     protected void openQRreading(){
-        openQRLector();
+        openCamQR();
         /*
         if (hasQRbuiltIn){
             openQRLector();

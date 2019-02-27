@@ -217,7 +217,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
     //QR
     protected void openQRreading(){
-        openQRLector();
+        openCamQR();
         /*
         if (hasQRbuiltIn){
             openQRLector();
@@ -229,7 +229,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     //QR
     protected void openCamQR(){
         Intent intent = new Intent(MarcajeBorrarTagActivity.this, QrCamActivity.class);
-        startActivityForResult(intent, 2);
+        startActivityForResult(intent, 3);
     }
     //QR HH
     protected void openQRLector(){
