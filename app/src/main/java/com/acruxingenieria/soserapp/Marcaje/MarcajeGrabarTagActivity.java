@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.acruxingenieria.soserapp.BodegaActivity;
 import com.acruxingenieria.soserapp.Consulta.ConsultaActivity;
 import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
@@ -96,6 +97,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
                     testRFID(12, 2, 15, "Yes");
 
+                    if (RFID_IDs.size()>0){
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("tipoMarcaje", tipoMarcaje);
                     setResult(Activity.RESULT_OK, returnIntent);
@@ -103,7 +105,9 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                     //enviar lectura pot http(diferenciar bin/marcaje)
 
                     finish();
-
+                    } else {
+                        tv_msg.setText(R.string.tags_no_encontrados);
+                    }
                     break;
                 }
                 case "QR": {
@@ -229,7 +233,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     protected void openQRreading(){
         openQRLector();
         /*
-        if (hasQRbuiltIn){
+        if (hasQrBuiltIn){
             openQRLector();
         } else {
             openCamQR();

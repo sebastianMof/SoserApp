@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
@@ -102,21 +100,22 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                     tv_msg.setText(R.string.leyendo);
 
                     testRFID(12, 2, 15, "Yes");
-                    String result = RFID_IDs.get(0);
+                    if (RFID_IDs.size()>0) {
+                        String result = RFID_IDs.get(0);
 
-                    Intent intent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
-                    intent.putExtra("code",result);
+                        Intent intent = new Intent(MarcajeBorrarTagActivity.this, MarcajeBorrarTagConfirmacionActivity.class);
+                        intent.putExtra("code", result);
 
-                    intent.putExtra("mUser", mUser);
-                    intent.putExtra("positionSelected", positionSelected);
-                    intent.putExtra("bodegaSelected", bodegaSelected);
+                        intent.putExtra("mUser", mUser);
+                        intent.putExtra("positionSelected", positionSelected);
+                        intent.putExtra("bodegaSelected", bodegaSelected);
 
-                    intent.putExtra("lectorSelected",lectorSelected);
+                        intent.putExtra("lectorSelected", lectorSelected);
 
-                    startActivityForResult(intent,3);
-
-                    //finish();
-
+                        startActivityForResult(intent, 3);
+                    } else {
+                        tv_msg.setText(R.string.tags_no_encontrados);
+                    }
                     break;
                 }
                 case "QR": {
@@ -129,7 +128,6 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                     break;
                 }
             }
-
 
         }
 

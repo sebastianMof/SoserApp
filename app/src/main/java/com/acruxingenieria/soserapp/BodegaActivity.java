@@ -1,8 +1,10 @@
 package com.acruxingenieria.soserapp;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -10,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 
 import java.util.ArrayList;
 
@@ -21,6 +25,10 @@ public class BodegaActivity extends AppCompatActivity {
     private String positionSelected;
     private String bodegaSelected;
     private String mUser;
+
+    //Qr
+    //public QrBuiltInActivity qrBuiltInActivity = new QrBuiltInActivity();
+    //public boolean hasQrBuiltIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +47,8 @@ public class BodegaActivity extends AppCompatActivity {
 
         configureButtonLogOut();
 
+        //QrTask qrTask = new QrTask(qrBuiltInActivity);
+        //qrTask.execute();
 
     }
 
@@ -160,5 +170,31 @@ public class BodegaActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+/*
+    private class QrTask extends AsyncTask<Boolean, Boolean, Boolean> {
 
+        public QrBuiltInActivity qrBuiltInActivity;
+
+        QrTask(QrBuiltInActivity qrBuiltInActivity){
+            this.qrBuiltInActivity = qrBuiltInActivity;
+        }
+
+        @Override
+        protected Boolean doInBackground(Boolean... booleans) {
+             return qrBuiltInActivity.hasQRLector();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            hasQrBuiltIn = result;
+            Log.e("TEST","hasQrBuiltIn: "+Boolean.toString(hasQrBuiltIn));
+        }
+
+    }
+
+    public boolean getHasQrBuiltIn(){
+        return hasQrBuiltIn;
+    }
+
+*/
 }

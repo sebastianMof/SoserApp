@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 
 /**
  * A login screen that offers login via user/password.
@@ -67,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
     @Override
@@ -218,5 +222,6 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
+
 }
 
