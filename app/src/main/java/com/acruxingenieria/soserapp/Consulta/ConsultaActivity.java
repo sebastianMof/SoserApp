@@ -85,7 +85,6 @@ public class ConsultaActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationConsulta);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         //hasQRbuiltIn = qrBuiltInActivity.hasQRLector();
 
         receiveDataFromIntent();
@@ -165,7 +164,6 @@ public class ConsultaActivity extends AppCompatActivity {
 
 
                 } else {
-                    ((ConsultaUnitariaFragment)consultaUnitariaFragment).showError();
                     loadFragment(consultaUnitariaFragment);
                     consultaUnitariaSelected = true;
                     consultaMasivaSelected = false;
@@ -280,7 +278,6 @@ public class ConsultaActivity extends AppCompatActivity {
                     idLecturaUnitaria = id;
                     loadFragment(consultaUnitariaLecturaFragment);
                 } else {
-                    ((ConsultaUnitariaFragment)consultaUnitariaFragment).showError();
                     loadFragment(consultaUnitariaFragment);
                     consultaUnitariaSelected = true;
                     consultaMasivaSelected = false;

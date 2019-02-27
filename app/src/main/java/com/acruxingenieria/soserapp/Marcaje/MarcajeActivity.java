@@ -1,7 +1,11 @@
 package com.acruxingenieria.soserapp.Marcaje;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -15,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.acruxingenieria.soserapp.Consulta.ConsultaActivity;
+import com.acruxingenieria.soserapp.Consulta.ConsultaUnitariaFragment;
 import com.acruxingenieria.soserapp.R;
 
 public class MarcajeActivity extends AppCompatActivity {
@@ -78,11 +84,6 @@ public class MarcajeActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
     //REPLACE FRAGMENT METHOD
     public boolean loadFragment(Fragment fragment) {

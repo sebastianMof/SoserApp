@@ -249,7 +249,8 @@ public class QrBuiltInActivity extends AppCompatActivity {
                     dataCode = getRutFromQR(barCode);
 
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("QR_ID",dataCode);
+                    returnIntent.putExtra("ID",dataCode);
+                    returnIntent.putExtra("lectorSelected","QR");
                     setResult(RESULT_OK,returnIntent);
                     barcode2DWithSoft.close();
                     finish();

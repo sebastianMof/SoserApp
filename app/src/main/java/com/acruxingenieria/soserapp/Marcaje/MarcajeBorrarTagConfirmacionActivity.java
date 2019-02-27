@@ -18,6 +18,7 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
     private String positionSelected;
     private String bodegaSelected;
     private String DATA;
+    private String lectorSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +54,6 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
         tv_msg_info.append(DATA);
     }
 
-
-
     private void configureButtonConfirmar() {
 
         Button btn_borrar_tag = (Button) findViewById(R.id.btnMarcajeBorrarTagConfirmacion);
@@ -66,6 +65,7 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
                 String result = codeID;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("result", result);
+                returnIntent.putExtra("lectorSelected",lectorSelected);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
             }
@@ -76,7 +76,6 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
     public void onBackPressed(){
         finish();
     }
-
 
     private void configureButtonAtras() {
         Button btn_atras = (Button) findViewById(R.id.btnMarcajeBorrarTagConfirmacionAtras);
@@ -95,6 +94,8 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
         mUser = getIntent().getStringExtra("mUser");
         positionSelected = getIntent().getStringExtra("positionSelected");
         bodegaSelected = getIntent().getStringExtra("bodegaSelected");
+
+        lectorSelected = getIntent().getStringExtra("lectorSelected");
 
     }
 

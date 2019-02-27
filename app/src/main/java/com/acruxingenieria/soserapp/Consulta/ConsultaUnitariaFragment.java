@@ -33,6 +33,8 @@ public class ConsultaUnitariaFragment extends Fragment {
     private ArrayList<String> lectorList;
     private String lectorSelected;
 
+    TextView tv_msg;
+
     //QR
     private boolean hasQRbuiltIn = false;
 
@@ -55,7 +57,7 @@ public class ConsultaUnitariaFragment extends Fragment {
         savedView = inflater.inflate(R.layout.fragment_consulta_unitaria, container, false);
         setSavedView(savedView);
 
-        TextView tv_msg = (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaError);
+        tv_msg = (TextView) getSavedView().findViewById(R.id.tvConsultaUnitariaError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
 
         initRFIDcontroller();
@@ -109,6 +111,7 @@ public class ConsultaUnitariaFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 lectorSelected =  (String) adapterView.getItemAtPosition(position);
+                tv_msg.setText(R.string.esperando_lectura);
 
             }
 
@@ -134,6 +137,7 @@ public class ConsultaUnitariaFragment extends Fragment {
                 openQRreading();
                 return true;
             case "NFC":
+                tv_msg.setText(R.string.leer_nfc);
                 return true;
         }
 
@@ -142,11 +146,13 @@ public class ConsultaUnitariaFragment extends Fragment {
 
     //QR
     protected void openQRreading(){
+        openQRLector();
+        /*
         if (hasQRbuiltIn){
             openQRLector();
         } else {
             openCamQR();
-        }
+        }*/
 
     }
     //QR
