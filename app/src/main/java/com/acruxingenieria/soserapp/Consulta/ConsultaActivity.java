@@ -216,14 +216,14 @@ public class ConsultaActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 4) {//4 for QR unitaria qr cam
             if(resultCode == Activity.RESULT_OK){
-                idLecturaUnitaria = data.getStringExtra("QR_ID");
+                idLecturaUnitaria = data.getStringExtra("ID");
                 qrReadingDone = true;
 
             }
         }
         if (requestCode == 5) {//5 for QR unitaria built in
             if(resultCode == Activity.RESULT_OK){
-                idLecturaUnitaria = data.getStringExtra("QR_ID");
+                idLecturaUnitaria = data.getStringExtra("ID");
                 qrReadingDone = true;
 
             }
