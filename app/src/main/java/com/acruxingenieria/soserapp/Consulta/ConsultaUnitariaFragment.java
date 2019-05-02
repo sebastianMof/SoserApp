@@ -16,6 +16,7 @@ import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
+import com.acruxingenieria.soserapp.Sesion;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,7 +42,6 @@ public class ConsultaUnitariaFragment extends Fragment {
     public ConsultaUnitariaFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

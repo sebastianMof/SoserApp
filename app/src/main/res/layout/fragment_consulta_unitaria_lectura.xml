@@ -10,7 +10,17 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/consulta_unitaria_lectura_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"/>
+
         <LinearLayout
+            android:id="@+id/consulta_unitaria_lectura_linear_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/color5"
@@ -43,6 +53,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/consulta_unitaria_lectura_linear_2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"

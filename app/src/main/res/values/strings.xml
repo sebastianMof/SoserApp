@@ -57,4 +57,5 @@
     <string name="escanear">Escanear</string>
     <string name="leer_nfc">Acercar TAG a lector NFC y esperar lectura(No es necesario presionar gatillo para NFC)</string>
     <string name="tags_no_encontrados">No se encontraron TAGs</string>
+    <string name="filtro">Filtro</string>
 </resources>

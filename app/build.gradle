@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -31,4 +35,5 @@ dependencies {
     implementation files('libs/IGLBarDecoder.jar')
     implementation files('libs/xUtils-2.5.5.jar')
     implementation 'me.dm7.barcodescanner:zxing:1.8.4'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.1'
 }

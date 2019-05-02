@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -35,7 +36,8 @@
         <activity android:name=".Marcaje.MarcajeBorrarTagConfirmacionActivity" />
         <activity android:name=".Marcaje.MarcajeLeerBinActivity" />
         <activity android:name=".QR.QrCamActivity" />
-        <activity android:name=".QR.QrBuiltInActivity"></activity>
+        <activity android:name=".QR.QrBuiltInActivity" />
+        <activity android:name=".Consulta.ConsultaMasivaFiltro"></activity>
     </application>
 
 </manifest>

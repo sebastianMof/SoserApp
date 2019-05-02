@@ -20,17 +20,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.*;
+
+import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * A login screen that offers login via user/password.
  */
 public class LoginActivity extends AppCompatActivity {
 
-    //remove after connecting to a real authentication system.
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "root:root", "test:1234"
-    };
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask mAuthTask = null;
@@ -45,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mUserView = (AutoCompleteTextView) findViewById(R.id.user);
 
@@ -171,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUser;
         private final String mPassword;
+        Sesion session = new Sesion("no user","no posicion","no bodega","no token","no position selected", "no bodega selected");
 
         UserLoginTask(String user, String password) {
             mUser = user;
@@ -181,21 +190,48 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
+            OkHttpClient client = new OkHttpClient();
+            JSONObject postdata = new JSONObject();
             try {
-                // Simulate network access.
-                Thread.sleep(800);
-            } catch (InterruptedException e) {
-                return false;
+                postdata.put("username",mUser);
+                postdata.put("password",mPassword);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUser)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+
+            final Request request = new Request.Builder()
+                    .url("https://demo-acrux-app.mybluemix.net/login")
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                if (response.body() != null) {
+
+                    String jsonResponse = response.body().string();
+
+                    try {
+
+                        JSONObject obj = new JSONObject(jsonResponse);
+
+                        session.setUser(mUser);
+                        session.setBodega("BODEGA_EJEMPLO");
+                        session.setPosicion("POSICION_EJEMPLO");
+                        session.setToken(obj.getString("token"));
+
+                    } catch (Throwable tx) {
+                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                    }
+
                 }
-            }
 
+                return response.isSuccessful();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return false;
         }
 
@@ -207,7 +243,7 @@ public class LoginActivity extends AppCompatActivity {
             if (success) {
                 Intent intent = new Intent(LoginActivity.this, BodegaActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("mUser", mUser);
+                intent.putExtra("session", session);
                 startActivity(intent);
                 //finish();
 

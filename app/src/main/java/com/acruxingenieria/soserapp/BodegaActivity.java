@@ -24,7 +24,7 @@ public class BodegaActivity extends AppCompatActivity {
 
     private String positionSelected;
     private String bodegaSelected;
-    private String mUser;
+    private Sesion session;
 
     //Qr
     //public QrBuiltInActivity qrBuiltInActivity = new QrBuiltInActivity();
@@ -34,6 +34,9 @@ public class BodegaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bodega);
+
+        Bundle data = getIntent().getExtras();
+        session = (Sesion) data.getParcelable("session");
 
         configureTitle();
 
@@ -53,19 +56,20 @@ public class BodegaActivity extends AppCompatActivity {
     }
 
     private void configureTitle() {
-        mUser= getIntent().getStringExtra("mUser");
         TextView tv_user = (TextView) findViewById(R.id.tvBodegaUsuario);
-        tv_user.setText(mUser.toUpperCase());
+        tv_user.setText(session.getUser().toUpperCase());
     }
 
     private void configurePositionList() {
         positionsList = new ArrayList<>();
-        positionsList.add("POSICION_EJEMPLO");
+        //positionsList.add("POSICION_EJEMPLO");
+        positionsList.add(session.getPosicion());
     }
 
     private void configureBodegaList() {
         bodegasList = new ArrayList<>();
-        bodegasList.add("BODEGA_EJEMPLO");
+        //bodegasList.add("BODEGA_EJEMPLO");
+        bodegasList.add(session.getBodega());
     }
 
     private void configureSpinnerPositions() {
@@ -90,6 +94,7 @@ public class BodegaActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 positionSelected =  (String) adapterView.getItemAtPosition(position);
+                session.setPositionSelected(positionSelected);
 
             }
 
@@ -123,6 +128,7 @@ public class BodegaActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 bodegaSelected =  (String) adapterView.getItemAtPosition(position);
+                session.setBodegaSelected(bodegaSelected);
 
             }
 
@@ -140,10 +146,7 @@ public class BodegaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(BodegaActivity.this,MenuActivity.class);
-
-                intent.putExtra("mUser", mUser);
-                intent.putExtra("positionSelected", positionSelected);
-                intent.putExtra("bodegaSelected", bodegaSelected);
+                intent.putExtra("session", session);
                 startActivity(intent);
             }
         });

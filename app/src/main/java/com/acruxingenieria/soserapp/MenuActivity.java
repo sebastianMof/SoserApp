@@ -27,10 +27,15 @@ public class MenuActivity extends AppCompatActivity {
     private ArrayAdapter<String> menuAdapter;
     private ListView lv_menu;
 
+    private Sesion session;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        Bundle data = getIntent().getExtras();
+        session = (Sesion) data.getParcelable("session");
 
         configureButtonLogOut();
 
@@ -50,9 +55,9 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void receiveDataFromIntent() {
-        mUser= getIntent().getStringExtra("mUser");
-        positionSelected= getIntent().getStringExtra("positionSelected");
-        bodegaSelected= getIntent().getStringExtra("bodegaSelected");
+        mUser= session.getUser();
+        positionSelected= session.getPositionSelected();
+        bodegaSelected= session.getBodegaSelected();
 
     }
 
@@ -106,6 +111,7 @@ public class MenuActivity extends AppCompatActivity {
                         intent.putExtra("mUser", mUser);
                         intent.putExtra("positionSelected", positionSelected);
                         intent.putExtra("bodegaSelected", bodegaSelected);
+                        intent.putExtra("session",session);
                         startActivity(intent);
                     }
 
@@ -115,6 +121,7 @@ public class MenuActivity extends AppCompatActivity {
                         intent.putExtra("mUser", mUser);
                         intent.putExtra("positionSelected", positionSelected);
                         intent.putExtra("bodegaSelected", bodegaSelected);
+                        intent.putExtra("session",session);
                         startActivity(intent);
 
                     }

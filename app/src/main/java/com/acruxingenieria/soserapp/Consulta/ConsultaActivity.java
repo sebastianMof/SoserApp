@@ -8,6 +8,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.se.omapi.Session;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.R;
+import com.acruxingenieria.soserapp.Sesion;
 
 import java.util.ArrayList;
 
@@ -33,6 +35,8 @@ public class ConsultaActivity extends AppCompatActivity {
     private String idLecturaUnitaria;
     private ArrayList<String> idLecturaMasiva;
     private String idLecturaMasivaSelected;
+
+    private Sesion session;
 
     private boolean qrReadingDone = false;
 
@@ -81,6 +85,10 @@ public class ConsultaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulta);
 
+        Bundle data = getIntent().getExtras();
+        session = (Sesion) data.getParcelable("session");
+        Log.e("TEST",session.getToken());
+
         //navBar
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationConsulta);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -113,6 +121,7 @@ public class ConsultaActivity extends AppCompatActivity {
         }
         return false;
     }
+
     public boolean loadConsultaMasivaInfoFragment(String idSelected) {
         idLecturaMasivaSelected = idSelected;
         if (consultaMasivaLecturaInfoFragment != null) {
@@ -199,9 +208,9 @@ public class ConsultaActivity extends AppCompatActivity {
     }
 
     private void receiveDataFromIntent() {
-        mUser= getIntent().getStringExtra("mUser");
-        positionSelected= getIntent().getStringExtra("positionSelected");
-        bodegaSelected= getIntent().getStringExtra("bodegaSelected");
+        mUser= session.getUser();
+        positionSelected= session.getPositionSelected();
+        bodegaSelected= session.getBodegaSelected();
     }
 
     protected String getIdLecturaUnitaria(){
