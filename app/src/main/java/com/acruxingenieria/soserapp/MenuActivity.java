@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.Consulta.ConsultaActivity;
+import com.acruxingenieria.soserapp.Consulta.ConsultaMasivaFiltro;
 import com.acruxingenieria.soserapp.Marcaje.MarcajeActivity;
 
 import java.util.ArrayList;
@@ -117,13 +119,13 @@ public class MenuActivity extends AppCompatActivity {
 
                         break;
                     case ("Consulta"):{
-                        Intent intent =new Intent(MenuActivity.this,ConsultaActivity.class);
+                        //ConsultaActivity en vez de ConsultaMasivaFiltro
+                        Intent intent =new Intent(MenuActivity.this,ConsultaMasivaFiltro.class);
                         intent.putExtra("mUser", mUser);
                         intent.putExtra("positionSelected", positionSelected);
                         intent.putExtra("bodegaSelected", bodegaSelected);
                         intent.putExtra("session",session);
                         startActivity(intent);
-
                     }
                         break;
 

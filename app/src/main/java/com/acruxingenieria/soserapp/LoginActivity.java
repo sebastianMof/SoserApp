@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity {
             RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
 
             final Request request = new Request.Builder()
-                    .url("https://demo-acrux-app.mybluemix.net/login")
+                    .url("https://node-red-soser-api.mybluemix.net/login")
                     .post(body)
                     .addHeader("Content-Type", "application/json")
                     .build();
