@@ -61,4 +61,7 @@
     <string name="_100">100</string>
     <string name="cantidad">Cantidad</string>
     <string name="_05_12_2019">05/12/2019</string>
+    <string name="stockcode">Stockcode</string>
+    <string name="aplicar">APLICAR</string>
+    <string name="limpiar">LIMPIAR</string>
 </resources>
