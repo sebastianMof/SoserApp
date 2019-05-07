@@ -175,7 +175,10 @@
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:inputType="text"
+                        android:focusable="false"
+                        android:ellipsize="start"
                         android:gravity="center"
+                        android:singleLine="true"
                         android:backgroundTint="@color/color5" />
                 </LinearLayout>
 
@@ -208,14 +211,22 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="end">
+
                     <EditText
                         android:id="@+id/etMarcajeMaterialCantidad"
-                        android:layout_width="200dp"
+                        android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:inputType="text"
                         android:gravity="center"
                         android:backgroundTint="@color/color5" />
+
+                    <Spinner
+                        android:id="@+id/spinnerMarcajeMaterialUnidad"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
                 </LinearLayout>
 
             </LinearLayout>

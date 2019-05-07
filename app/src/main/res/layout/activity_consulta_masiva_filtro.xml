@@ -70,7 +70,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10sp">
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="10sp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,7 +96,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:orientation="horizontal">
+            android:layout_marginBottom="10sp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -128,33 +131,83 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/etConsultaMasivaFiltroStartDate"
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/_05_12_2019"
-                android:focusable="false" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/color1"
+                android:text="@string/fecha_de_expiraci_n"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10sp"
+            android:layout_marginBottom="10sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <EditText
+                    android:id="@+id/etConsultaMasivaFiltroStartDate"
+                    android:layout_width="150sp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/fecha_inicio"
+                    android:focusable="false"
+                    android:ellipsize="start"
+                    android:gravity="center_horizontal"
+                    android:singleLine="true" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="end">
+                <EditText
+                    android:id="@+id/etConsultaMasivaFiltroEndDate"
+                    android:layout_width="150sp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/fecha_fin"
+                    android:focusable="false"
+                    android:ellipsize="start"
+                    android:gravity="center_horizontal"
+                    android:singleLine="true"/>
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/etConsultaMasivaFiltroEndDate"
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/_05_12_2019"
-                android:focusable="false" />
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/color1"
+                android:text="@string/stockcode"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp">
             <EditText
                 android:id="@+id/etConsultaMasivaFiltroStockcode"
                 android:layout_width="match_parent"
@@ -166,7 +219,23 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10sp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/color1"
+                android:text="@string/bin"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp">
             <EditText
                 android:id="@+id/etConsultaMasivaFiltroBincode"
                 android:layout_width="match_parent"
@@ -178,7 +247,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp">
 
             <LinearLayout
                 android:layout_width="wrap_content"

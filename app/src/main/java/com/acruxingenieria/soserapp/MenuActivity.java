@@ -141,6 +141,7 @@ public class MenuActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent =new Intent(MenuActivity.this,LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("session", session);
                 startActivity(intent);
                 finish();
             }

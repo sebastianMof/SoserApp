@@ -45,7 +45,6 @@
     <string name="unitaria">Unitaria</string>
     <string name="masiva">Masiva</string>
     <string name="instrucciones_consulta_masiva">Apunte lector y presione gatillo en dirección al TAG</string>
-    <string name="stockcode">Stockcode</string>
     <string name="nombre_material">Nombre Material</string>
     <string name="informaci_n_del_tag">Información del TAG...</string>
     <string name="cantidad_detectada">Cantidad detectada:</string>
@@ -64,4 +63,7 @@
     <string name="stockcode">Stockcode</string>
     <string name="aplicar">APLICAR</string>
     <string name="limpiar">LIMPIAR</string>
+    <string name="fecha_inicio">Fecha Inicio</string>
+    <string name="fecha_fin">Fecha Fin</string>
+    <string name="fecha_de_expiraci_n">Fecha de expiración</string>
 </resources>

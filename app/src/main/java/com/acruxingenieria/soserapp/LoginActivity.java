@@ -3,7 +3,9 @@ package com.acruxingenieria.soserapp;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,9 +24,9 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.*;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -38,6 +40,10 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+    //For Device ID
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask mAuthTask = null;
@@ -179,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUser;
         private final String mPassword;
-        Sesion session = new Sesion("no user","no posicion","no bodega","no token","no position selected", "no bodega selected");
+        Sesion session = new Sesion("no user","no device id","no token","no position selected", "no bodega selected");
 
         UserLoginTask(String user, String password) {
             mUser = user;
@@ -218,8 +224,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject obj = new JSONObject(jsonResponse);
 
                         session.setUser(mUser);
-                        session.setBodega("BODEGA_EJEMPLO");
-                        session.setPosicion("POSICION_EJEMPLO");
+                        session.setDeviceId(getDeviceId());
                         session.setToken(obj.getString("token"));
 
                     } catch (Throwable tx) {
@@ -257,6 +262,33 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
+    }
+
+    protected String getDeviceId() {
+        // Método que retorna serial number, en caso de que el device no posea uno o sea nulo, crea uno por el método id().
+        if (Build.SERIAL != null) {
+            return Build.SERIAL;
+        }
+        return id(LoginActivity.this);
+    }
+
+    public synchronized static String id(Context context) {
+        //Método que retorna un id único para cada instalación de la app, es decir, cambia sólo
+        // cuando se desinstala la app o se limpian las SharedPreferences.
+        //Se llama en caso de que el device no tenga número de serie.
+        if (uniqueID == null) {
+            SharedPreferences sharedPrefs = context.getSharedPreferences(
+                    PREF_UNIQUE_ID, Context.MODE_PRIVATE);
+            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
+
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = sharedPrefs.edit();
+                editor.putString(PREF_UNIQUE_ID, uniqueID);
+                editor.commit();
+            }
+        }
+        return uniqueID;
     }
 
 }

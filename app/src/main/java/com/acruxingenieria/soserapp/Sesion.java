@@ -16,17 +16,15 @@ public class Sesion implements Parcelable {
     };
 
     private String user;
-    private String posicion;
-    private String bodega;
+    private String deviceId;
     private String token;
     private String positionSelected;
     private String bodegaSelected;
 
     // Constructor
-    public Sesion(String user, String posicion, String bodega, String token, String positionSelected, String bodegaSelected){
+    public Sesion(String user, String deviceId, String token, String positionSelected, String bodegaSelected){
         this.user = user;
-        this.posicion = posicion;
-        this.bodega = bodega;
+        this.deviceId = deviceId;
         this.token = token;
         this.positionSelected = positionSelected;
         this.bodegaSelected = bodegaSelected;
@@ -41,20 +39,12 @@ public class Sesion implements Parcelable {
         this.user = user;
     }
 
-    public String getPosicion() {
-        return posicion;
+    public String getDeviceId() {
+        return deviceId;
     }
 
-    public void setPosicion(String posicion) {
-        this.posicion = posicion;
-    }
-
-    public String getBodega() {
-        return bodega;
-    }
-
-    public void setBodega(String bodega) {
-        this.bodega = bodega;
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getToken() {
@@ -85,8 +75,7 @@ public class Sesion implements Parcelable {
     // Parcelling part
     public Sesion(Parcel in){
         this.user = in.readString();
-        this.posicion =  in.readString();
-        this.bodega =  in.readString();
+        this.deviceId = in.readString();
         this.token = in.readString();
         this.positionSelected = in.readString();
         this.bodegaSelected = in.readString();
@@ -100,8 +89,7 @@ public class Sesion implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.user);
-        dest.writeString(this.posicion);
-        dest.writeString(this.bodega);
+        dest.writeString(this.deviceId);
         dest.writeString(this.token);
         dest.writeString(this.positionSelected);
         dest.writeString(this.bodegaSelected);
@@ -111,8 +99,7 @@ public class Sesion implements Parcelable {
     public String toString() {
         return "Sesion{" +
                 " user='" + user + '\'' +
-                ", posicion='" + posicion + '\'' +
-                ", bodega='" + bodega + '\'' +
+                ", deviceId='" + deviceId + '\'' +
                 ", token='" + token + '\'' +
                 ", positionSelected='" + positionSelected + '\'' +
                 ", bodegaSelected='" + bodegaSelected + '\'' +
