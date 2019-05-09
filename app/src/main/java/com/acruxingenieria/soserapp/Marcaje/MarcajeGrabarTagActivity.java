@@ -1,11 +1,16 @@
 package com.acruxingenieria.soserapp.Marcaje;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -26,15 +31,34 @@ import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
+import com.acruxingenieria.soserapp.Sesion;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class MarcajeGrabarTagActivity extends AppCompatActivity {
+
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+    private GrabarTask grabarTask = null;
+    private View mProgressView;
+    private View mLayoutView;
 
     private String mUser;
     private String positionSelected;
     private String bodegaSelected;
+    private Sesion session;
     private String tipoMarcaje;
     //NFC
     private NfcAdapter mNfcAdapter;
@@ -44,9 +68,11 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     //marcaje=material
     private String marcajeMaterialNombre;
     private String marcajeMaterialStockcode;
+    private String marcajeMaterialSerialcode;
     private String marcajeMaterialBin;
     private String marcajeMaterialFechavenc;
     private String marcajeMaterialCantidad;
+    private String marcajeMaterialUnidad;
     //marcaje=bin
     private String marcajeBinBin;
     //spinner
@@ -62,6 +88,9 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
         tv_msg = (TextView) findViewById(R.id.tvMarcajeGrabarTagError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
+
+        mProgressView = findViewById(R.id.marcaje_grabar_tag_progress);
+        mLayoutView = findViewById(R.id.ll_marcaje_grabar_tag);
 
         receiveDataFromIntent();
 
@@ -188,13 +217,18 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
         if (tipoMarcaje.equals("material")){
             marcajeMaterialNombre = getIntent().getStringExtra("marcajeMaterialNombre");
             marcajeMaterialStockcode = getIntent().getStringExtra("marcajeMaterialStockcode");
+            marcajeMaterialSerialcode = getIntent().getStringExtra("marcajeMaterialSerialcode");
             marcajeMaterialBin = getIntent().getStringExtra("marcajeMaterialBin");
             marcajeMaterialFechavenc = getIntent().getStringExtra("marcajeMaterialFechavenc");
             marcajeMaterialCantidad = getIntent().getStringExtra("marcajeMaterialCantidad");
+            marcajeMaterialUnidad = getIntent().getStringExtra("marcajeMaterialUnidad");
 
         } else if (tipoMarcaje.equals("bin")){
             marcajeBinBin = getIntent().getStringExtra("marcajeBinBin");
         }
+        Bundle data = getIntent().getExtras();
+        session = (Sesion) data.getParcelable("session");
+
     }
 
     //RFID METHODS
@@ -259,6 +293,11 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("tipoMarcaje","material");
                 //MARCAR data.getStringExtra("ID") y si hay exito retornar con result_ok
+
+                ArrayList<String> aux = new ArrayList<String>();
+                aux.add(data.getStringExtra("ID"));
+                attemp(aux);
+
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
 
@@ -333,4 +372,139 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             mNfcAdapter.disableForegroundDispatch(MarcajeGrabarTagActivity.this);
         }
     }
+
+
+    public class GrabarTask extends AsyncTask<Void, Void, Boolean> {
+
+        JSONArray IDs;
+        GrabarTask(ArrayList<String> id) {
+            IDs = new JSONArray();
+            for (int i=0;i<id.size();i++){
+                IDs.put(id.get(i));
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            JSONObject postdata = new JSONObject();
+
+            try {
+                postdata.put("serial_code",marcajeMaterialSerialcode);
+                postdata.put("bin_code",marcajeMaterialBin);
+                postdata.put("tags_id",IDs);
+                postdata.put("name",marcajeMaterialNombre);
+                postdata.put("stock_code",marcajeMaterialStockcode);
+                postdata.put("expire_date",marcajeMaterialFechavenc);
+                postdata.put("quantity", Integer.valueOf(marcajeMaterialCantidad));
+                postdata.put("measure_unit",marcajeMaterialUnidad);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+            Log.e("BODY",postdata.toString());
+
+            final Request request = new Request.Builder()
+                    .url("https://node-red-soser-api.mybluemix.net/equipment/")
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",session.getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                if (response.body() != null) {
+
+                    String jsonResponse = response.body().string();
+
+                    Log.e("TEST", jsonResponse);
+
+                    try {
+
+                        JSONObject obj = new JSONObject(jsonResponse);
+
+                    } catch (Throwable tx) {
+                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                    }
+
+                }
+
+                return response.isSuccessful();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            grabarTask = null;
+            showProgress(false);
+
+            if (!success) {
+                Toast.makeText(MarcajeGrabarTagActivity.this, "No hay conexión al servicio.", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            grabarTask = null;
+            showProgress(false);
+        }
+    }
+
+    private void attemp(ArrayList<String> id){
+        if (grabarTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        grabarTask = new MarcajeGrabarTagActivity.GrabarTask(id);
+        grabarTask.execute((Void) null);
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLayoutView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+
+
 }

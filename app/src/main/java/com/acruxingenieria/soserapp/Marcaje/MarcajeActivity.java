@@ -117,6 +117,7 @@ public class MarcajeActivity extends AppCompatActivity {
                 if (materialFragmentSelected){
                     EditText et_marcaje_material_nombre = (EditText) findViewById(R.id.etMarcajeMaterialNombre);
                     EditText et_marcaje_material_stockcode = (EditText) findViewById(R.id.etMarcajeMaterialStock);
+                    EditText et_marcaje_material_serialcode = (EditText) findViewById(R.id.etMarcajeMaterialSerialcode);
                     EditText et_marcaje_material_bin = (EditText) findViewById(R.id.etMarcajeMaterialBin);
                     EditText et_marcaje_material_fechavenc = (EditText) findViewById(R.id.etMarcajeMaterialFechaVenc);
                     EditText et_marcaje_material_cantidad = (EditText) findViewById(R.id.etMarcajeMaterialCantidad);
@@ -126,9 +127,15 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("tipoMarcaje", "material");
                     intent.putExtra("marcajeMaterialNombre", et_marcaje_material_nombre.getText().toString());
                     intent.putExtra("marcajeMaterialStockcode", et_marcaje_material_stockcode.getText().toString());
+                    intent.putExtra("marcajeMaterialSerialcode", et_marcaje_material_serialcode.getText().toString());
                     intent.putExtra("marcajeMaterialBin", et_marcaje_material_bin.getText().toString());
                     intent.putExtra("marcajeMaterialFechavenc", et_marcaje_material_fechavenc.getText().toString());
                     intent.putExtra("marcajeMaterialCantidad", et_marcaje_material_cantidad.getText().toString());
+
+                    String unit = ((MarcajeMaterialFragment)marcajeMaterialFragment).getUnitSelected();
+                    intent.putExtra("marcajeMaterialUnidad", unit);
+
+                    intent.putExtra("session", session);
 
                     intent.putExtra("mUser", mUser);
                     intent.putExtra("positionSelected", positionSelected);

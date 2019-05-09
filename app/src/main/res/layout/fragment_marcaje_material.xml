@@ -101,6 +101,45 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Serialcode"
+                        android:textColor="@color/color1"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="end">
+                    <EditText
+                        android:id="@+id/etMarcajeMaterialSerialcode"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:gravity="center"
+                        android:backgroundTint="@color/color5" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginEnd="5dp">
                     <Button
@@ -217,13 +256,13 @@
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:gravity="center"
                         android:backgroundTint="@color/color5" />
 
                     <Spinner
                         android:id="@+id/spinnerMarcajeMaterialUnidad"
-                        android:layout_width="match_parent"
+                        android:layout_width="100sp"
                         android:layout_height="match_parent" />
 
 
