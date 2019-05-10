@@ -52,12 +52,14 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
     private GrabarTask grabarTask = null;
+    private GrabarBinTask grabarBinTask = null;
     private View mProgressView;
     private View mLayoutView;
 
     private String mUser;
     private String positionSelected;
     private String bodegaSelected;
+
     private Sesion session;
     private String tipoMarcaje;
     //NFC
@@ -290,21 +292,16 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
         if (requestCode == 1) {//4 for QR unitaria qr cam
             if(resultCode == Activity.RESULT_OK){
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("tipoMarcaje","material");
+
                 //MARCAR data.getStringExtra("ID") y si hay exito retornar con result_ok
 
                 ArrayList<String> aux = new ArrayList<String>();
                 aux.add(data.getStringExtra("ID"));
-
-                if (tipoMarcaje.equals("material")){
-                    attemp(aux,"material");
-
-                } else if (tipoMarcaje.equals("bin")){
-                    attemp(aux,"bin");
-
+                if (tipoMarcaje=="material"){
+                    attemp(aux);
+                }else {
+                    attempBin(aux);
                 }
-
 
             }
         }
@@ -382,14 +379,12 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     public class GrabarTask extends AsyncTask<Void, Void, Boolean> {
 
         JSONArray IDs;
-        String tipo;
 
-        GrabarTask(ArrayList<String> id,String tipoMarcaje) {
+        GrabarTask(ArrayList<String> id) {
             IDs = new JSONArray();
             for (int i=0;i<id.size();i++){
                 IDs.put(id.get(i));
             }
-            tipo=tipoMarcaje;
 
         }
 
@@ -471,6 +466,89 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             grabarTask = null;
             showProgress(false);
         }
+    }
+
+    public class GrabarBinTask extends AsyncTask<Void, Void, Boolean> {
+
+        JSONArray IDs;
+
+        GrabarBinTask(ArrayList<String> id) {
+            IDs = new JSONArray();
+            for (int i=0;i<id.size();i++){
+                IDs.put(id.get(i));
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            JSONObject postdata = new JSONObject();
+
+            try {
+                postdata.put("bin_code",marcajeBinBin);
+                postdata.put("warehouse_code",session.getBodegaSelected());
+                postdata.put("tags_id",IDs);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+            Log.e("BODY",postdata.toString());
+
+            final Request request = new Request.Builder()
+                    .url("https://node-red-soser-api.mybluemix.net/bins/")
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",session.getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                return response.isSuccessful();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            grabarBinTask = null;
+            showProgress(false);
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("tipoMarcaje","bin");
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+
+            if (!success) {
+                Toast.makeText(MarcajeGrabarTagActivity.this, "Error", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            grabarBinTask = null;
+            showProgress(false);
+        }
+    }
+
+    private void attempBin(ArrayList<String> id){
+        if (grabarBinTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        grabarBinTask = new MarcajeGrabarTagActivity.GrabarBinTask(id);
+        grabarBinTask.execute((Void) null);
     }
 
     private void attemp(ArrayList<String> id){

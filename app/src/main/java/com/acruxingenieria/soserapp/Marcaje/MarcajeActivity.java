@@ -155,6 +155,8 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
 
+                    intent.putExtra("session", session);
+
                     startActivityForResult(intent, 1);
                 }
 
@@ -213,7 +215,6 @@ public class MarcajeActivity extends AppCompatActivity {
                     et_stockcode.setText("");
                     et_fechavenc.setText("");
                     et_cantidad.setText("");
-
 
                 } else if (data.getStringExtra("tipoMarcaje").equals("bin")){
                     fragmentView = ((MarcajeBinFragment)marcajeBinFragment).getSavedView();
