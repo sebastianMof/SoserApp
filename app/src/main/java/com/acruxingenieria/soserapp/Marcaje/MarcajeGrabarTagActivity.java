@@ -296,7 +296,15 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
                 ArrayList<String> aux = new ArrayList<String>();
                 aux.add(data.getStringExtra("ID"));
-                attemp(aux);
+
+                if (tipoMarcaje.equals("material")){
+                    attemp(aux,"material");
+
+                } else if (tipoMarcaje.equals("bin")){
+                    attemp(aux,"bin");
+
+                }
+
 
             }
         }
@@ -374,11 +382,14 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     public class GrabarTask extends AsyncTask<Void, Void, Boolean> {
 
         JSONArray IDs;
-        GrabarTask(ArrayList<String> id) {
+        String tipo;
+
+        GrabarTask(ArrayList<String> id,String tipoMarcaje) {
             IDs = new JSONArray();
             for (int i=0;i<id.size();i++){
                 IDs.put(id.get(i));
             }
+            tipo=tipoMarcaje;
 
         }
 
@@ -471,7 +482,6 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
         grabarTask = new MarcajeGrabarTagActivity.GrabarTask(id);
         grabarTask.execute((Void) null);
     }
-
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
