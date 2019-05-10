@@ -213,6 +213,8 @@ public class MarcajeActivity extends AppCompatActivity {
                     et_stockcode.setText("");
                     et_fechavenc.setText("");
                     et_cantidad.setText("");
+
+
                 } else if (data.getStringExtra("tipoMarcaje").equals("bin")){
                     fragmentView = ((MarcajeBinFragment)marcajeBinFragment).getSavedView();
                     EditText et_bin = fragmentView.findViewById(R.id.etMarcajeBinBin);

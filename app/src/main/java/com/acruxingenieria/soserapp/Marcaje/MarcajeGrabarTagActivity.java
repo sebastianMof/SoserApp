@@ -298,9 +298,6 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                 aux.add(data.getStringExtra("ID"));
                 attemp(aux);
 
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
-
             }
         }
 
@@ -422,7 +419,6 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                 if (response.body() != null) {
 
                     String jsonResponse = response.body().string();
-
                     Log.e("TEST", jsonResponse);
 
                     try {
@@ -447,8 +443,13 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             grabarTask = null;
             showProgress(false);
 
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("tipoMarcaje","material");
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+
             if (!success) {
-                Toast.makeText(MarcajeGrabarTagActivity.this, "No hay conexión al servicio.", Toast.LENGTH_LONG).show();
+                Toast.makeText(MarcajeGrabarTagActivity.this, "Error", Toast.LENGTH_LONG).show();
 
             }
 
