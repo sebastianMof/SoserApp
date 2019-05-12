@@ -68,6 +68,7 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
                 returnIntent.putExtra("lectorSelected",lectorSelected);
                 setResult(Activity.RESULT_OK, returnIntent);
                 finish();
+
             }
         });
     }

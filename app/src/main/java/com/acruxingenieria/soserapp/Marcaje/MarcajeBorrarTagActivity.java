@@ -245,14 +245,17 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
                 Intent confirmIntent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
                 confirmIntent.putExtra("code", data.getStringExtra("ID"));
+
                 confirmIntent.putExtra("mUser", mUser);
                 confirmIntent.putExtra("positionSelected", positionSelected);
                 confirmIntent.putExtra("bodegaSelected", bodegaSelected);
+
                 if (data.getStringExtra("lectorSelected")!=null)
                     if (data.getStringExtra("lectorSelected").equals("QR")){
                         startActivity(confirmIntent);
                     }
                 finish();
+
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
