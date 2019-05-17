@@ -9,6 +9,7 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,13 @@ import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
+import com.acruxingenieria.soserapp.Sesion;
 
 import java.util.ArrayList;
 
 public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
+    private Sesion session;
     private String mUser;
     private String positionSelected;
     private String bodegaSelected;
@@ -54,6 +57,9 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marcaje_borrar_tag);
+
+        Bundle data = getIntent().getExtras();
+        session = (Sesion) data.getParcelable("session");
 
         tv_msg = (TextView) findViewById(R.id.tvMarcajeBorrarTagError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
@@ -139,6 +145,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
         mUser = getIntent().getStringExtra("mUser");
         positionSelected = getIntent().getStringExtra("positionSelected");
         bodegaSelected = getIntent().getStringExtra("bodegaSelected");
+        tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
 
     }
 
@@ -249,6 +256,8 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                 confirmIntent.putExtra("mUser", mUser);
                 confirmIntent.putExtra("positionSelected", positionSelected);
                 confirmIntent.putExtra("bodegaSelected", bodegaSelected);
+                confirmIntent.putExtra("tipoMarcaje", tipoMarcaje);
+                confirmIntent.putExtra("session", session);
 
                 if (data.getStringExtra("lectorSelected")!=null)
                     if (data.getStringExtra("lectorSelected").equals("QR")){

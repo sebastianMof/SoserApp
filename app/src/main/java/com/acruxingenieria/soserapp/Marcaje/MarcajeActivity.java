@@ -176,7 +176,9 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("mUser", mUser);
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
-                    intent.putExtra("bodegaMarcaje", "material");
+                    intent.putExtra("tipoMarcaje", "material");
+
+                    intent.putExtra("session", session);
 
                     startActivityForResult(intent,3);
 
@@ -186,7 +188,8 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("mUser", mUser);
                     intent.putExtra("positionSelected", positionSelected);
                     intent.putExtra("bodegaSelected", bodegaSelected);
-                    intent.putExtra("bodegaMarcaje", "bin");
+                    intent.putExtra("tipoMarcaje", "bin");
+                    intent.putExtra("session", session);
 
                     startActivityForResult(intent,3);
                 }
@@ -212,11 +215,13 @@ public class MarcajeActivity extends AppCompatActivity {
 
                     EditText et_nombre = fragmentView.findViewById(R.id.etMarcajeMaterialNombre);
                     EditText et_stockcode = fragmentView.findViewById(R.id.etMarcajeMaterialStock);
+                    EditText et_serialcode = fragmentView.findViewById(R.id.etMarcajeMaterialSerialcode);
                     EditText et_fechavenc = fragmentView.findViewById(R.id.etMarcajeMaterialFechaVenc);
                     EditText et_cantidad = fragmentView.findViewById(R.id.etMarcajeMaterialCantidad);
 
                     et_nombre.setText("");
                     et_stockcode.setText("");
+                    et_serialcode.setText("");
                     et_fechavenc.setText("");
                     et_cantidad.setText("");
 
