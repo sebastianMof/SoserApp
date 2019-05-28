@@ -104,7 +104,7 @@ public class MenuActivity extends AppCompatActivity {
                         break;
                     case ("Consulta"):{
                         //ConsultaActivity en vez de ConsultaMasivaFiltro
-                        Intent intent =new Intent(MenuActivity.this,ConsultaMasivaFiltro.class);
+                        Intent intent =new Intent(MenuActivity.this,ConsultaActivity.class);
                         intent.putExtra("session",session);
                         startActivity(intent);
                     }

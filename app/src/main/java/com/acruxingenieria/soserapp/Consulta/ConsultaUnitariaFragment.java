@@ -146,13 +146,12 @@ public class ConsultaUnitariaFragment extends Fragment {
 
     //QR
     protected void openQRreading(){
-        openCamQR();
-        /*
+        hasQRbuiltIn=true;
         if (hasQRbuiltIn){
             openQRLector();
         } else {
             openCamQR();
-        }*/
+        }
 
     }
     //QR

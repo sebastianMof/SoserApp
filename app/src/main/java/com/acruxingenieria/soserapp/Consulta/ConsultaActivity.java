@@ -143,11 +143,13 @@ public class ConsultaActivity extends AppCompatActivity {
             if (consultaUnitariaSelected){
                 String lector = ((ConsultaUnitariaFragment)consultaUnitariaFragment).getLectorSelected();
                 boolean readed = false;
+
                 try {
                     readed = ((ConsultaUnitariaFragment) consultaUnitariaFragment).read();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
+
                 if ( readed && lector.equals("RFID")){
                     idLecturaUnitaria = ((ConsultaUnitariaFragment)consultaUnitariaFragment).getIdLecturaUnitaria();
                     if (idLecturaUnitaria !=null)
@@ -317,4 +319,7 @@ public class ConsultaActivity extends AppCompatActivity {
         return hasQRbuiltIn;
     }
 
+    public Sesion getSession() {
+        return session;
+    }
 }

@@ -3,6 +3,9 @@ package com.acruxingenieria.soserapp.Consulta;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,10 +15,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.acruxingenieria.soserapp.Marcaje.MarcajeLeerBinActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.Sesion;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Objects;
+
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class ConsultaUnitariaLecturaFragment extends Fragment {
 
@@ -30,6 +48,9 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
     private View mFormView2;
 
     private Sesion session;
+    private GetEquipmentTask getEquipmentTask = null;
+    private GetEquipmentByIdTask getEquipmentByIdTask = null;
+
 
     public ConsultaUnitariaLecturaFragment() {
         // Required empty public constructor
@@ -67,12 +88,10 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         //Acá hay que hacer la query para el ID dado, lo siquiente es temporal
         if (id!=null){
             showProgress(true);
-            //session=;
-            Log.e("TEST",session.getToken());
+            ArrayList<String> aux = new ArrayList<>();
+            aux.add(id);
+            attemp(aux);
 
-            stockcode = "stockcode_"+id;
-            nombre = "nombre_"+id;
-            info = "info_"+id;
         }
 
     }
@@ -147,4 +166,213 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
 
         }
     }
+
+    public class GetEquipmentTask extends AsyncTask<Void, Void, Boolean> {
+
+        String IDs;
+        String serialCode;
+
+        GetEquipmentTask(ArrayList<String> id) {
+            IDs = "";
+            for (int i=0;i<id.size();i++){
+                IDs = IDs + id.get(i);
+                if (i>1){
+                    IDs = IDs + ",";
+                }
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            HttpUrl httpUrl = new HttpUrl.Builder()
+                    .scheme("https")
+                    .host("node-red-soser-api.mybluemix.net")
+                    .addPathSegment("equipment")
+                    .addQueryParameter("tags_id", IDs)
+                    .build();
+
+            final Request request = new Request.Builder()
+                    .url(httpUrl)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",((ConsultaActivity)Objects.requireNonNull(getActivity())).getSession().getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                if (response.body() != null) {
+
+                    String jsonResponse = response.body().string();
+                    try {
+
+                        JSONObject obj = new JSONObject(jsonResponse);
+                        JSONArray rows = obj.getJSONArray("rows");
+                        JSONObject lastObj = rows.getJSONObject(rows.length()-1);
+                        String id = lastObj.getString("id");
+                        String[] serial_code = id.split(":");
+
+                        serialCode=serial_code[1];
+
+                        return true;
+
+                    } catch (Throwable tx) {
+                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                        return false;
+                    }
+
+                }
+
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            getEquipmentTask = null;
+            showProgress(false);
+
+            if (success){
+                Log.e("TEST","serialCode: "+serialCode);
+                attempById(serialCode);
+            }
+
+            if (!success) {
+                TextView error = getSavedView().findViewById(R.id.tvConsultaUnitariaLecturaInfo);
+                error.setText("Error en la solicitud, revisar tag leído.");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            getEquipmentTask = null;
+            showProgress(false);
+        }
+    }
+
+    public class GetEquipmentByIdTask extends AsyncTask<Void, Void, Boolean> {
+
+        String serialCode;
+
+        GetEquipmentByIdTask(String serialCode) {
+            this.serialCode=serialCode;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            //https://node-red-soser-api.mybluemix.net/equipment/:serial_code
+            HttpUrl httpUrl = new HttpUrl.Builder()
+                    .scheme("https")
+                    .host("node-red-soser-api.mybluemix.net")
+                    .addPathSegment("equipment")
+                    .addPathSegment(serialCode)
+                    .build();
+
+            final Request request = new Request.Builder()
+                    .url(httpUrl)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",((ConsultaActivity)Objects.requireNonNull(getActivity())).getSession().getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                if (response.body() != null) {
+
+                    String jsonResponse = response.body().string();
+                    try {
+
+                        JSONObject obj = new JSONObject(jsonResponse);
+
+                        stockcode = "Código de stock: "+obj.getString("stock_code");
+                        nombre = "Nombre: "+obj.getString("name");
+
+                        info = "";
+                        info = info + "Cantidad: " + obj.getString("quantity") + obj.getString("measure_unit")+"\n";
+                        info = info + "Tipo: " + obj.getString("type")+"\n";
+                        info = info + "código de serie: " + obj.getString("serial_code")+"\n";
+                        info = info + "código de bin: " + obj.getString("bin_code")+"\n";
+                        info = info + "Fecha de vencimiento: " + obj.getString("expire_date")+"\n";
+
+                        info = info + "Etiquetas: "+"\n";
+                        JSONArray tags = new JSONArray();
+                        tags = obj.getJSONArray("tags_id");
+                        for (int i = 0 ; i < tags.length() ; i++){
+                            info = info + tags.getString(i)+"\n";
+                        }
+
+                        return true;
+
+                    } catch (Throwable tx) {
+                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                        return false;
+                    }
+
+                }
+
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            getEquipmentByIdTask = null;
+            showProgress(false);
+
+            if (success){
+                Log.e("TEST","success");
+                configureStockcodeTextView();
+                configureNombreTextView();
+                configureTagInfoTextView();
+
+            }
+
+            if (!success) {
+                TextView error = getSavedView().findViewById(R.id.tvConsultaUnitariaLecturaInfo);
+                error.setText("Error en la solicitud, revisar tag leído.");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            getEquipmentByIdTask = null;
+            showProgress(false);
+        }
+    }
+
+
+    private void attemp(ArrayList<String> id){
+        if (getEquipmentTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        getEquipmentTask = new GetEquipmentTask(id);
+        getEquipmentTask.execute((Void) null);
+    }
+
+    private void attempById(String serialCode){
+        if (getEquipmentByIdTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        getEquipmentByIdTask = new GetEquipmentByIdTask(serialCode);
+        getEquipmentByIdTask.execute((Void) null);
+    }
+
 }
