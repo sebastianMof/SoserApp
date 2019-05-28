@@ -76,6 +76,9 @@ public class MarcajeActivity extends AppCompatActivity {
         finish();
     }
 
+    public Sesion getSession() {
+        return session;
+    }
 
     //REPLACE FRAGMENT METHOD
     public boolean loadFragment(Fragment fragment) {

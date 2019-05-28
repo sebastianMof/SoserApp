@@ -100,6 +100,8 @@ public class MarcajeMaterialFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent =new Intent(getActivity(),MarcajeLeerBinActivity.class);
+
+                intent.putExtra("session", ((MarcajeActivity)Objects.requireNonNull(getActivity())).getSession() );
                 Objects.requireNonNull(getActivity()).startActivityForResult(intent,2);
 
             }

@@ -1,14 +1,20 @@
 package com.acruxingenieria.soserapp.Marcaje;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +29,22 @@ import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.RFID.RFIDController;
+import com.acruxingenieria.soserapp.Sesion;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MarcajeLeerBinActivity extends AppCompatActivity {
 
@@ -32,6 +52,15 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
     private String lectorSelected;
 
     private String readedBIN;
+
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
+
+    private GetBinTask getBinTask = null;
+    private View mProgressView;
+    private View mLayoutView;
+
+    private Sesion session;
+    private String tipoMarcaje;
 
     //NFC
     private NfcAdapter mNfcAdapter;
@@ -46,6 +75,11 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marcaje_leer_bin);
+
+        Bundle data = getIntent().getExtras();
+        session = (Sesion) data.getParcelable("session");
+        //mProgressView = findViewById(R.id.marcaje_grabar_tag_progress);
+        //mLayoutView = findViewById(R.id.ll_marcaje_grabar_tag);
 
         tv_msg = (TextView) findViewById(R.id.tvMarcajeLeerBinError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
@@ -91,17 +125,17 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
                     tv_msg.setText(R.string.leyendo);
 
                     testRFID(12, 2, 15, "Yes");
-                    readedBIN = RFID_IDs.get(0);
 
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("result", readedBIN);
-                    setResult(Activity.RESULT_OK, returnIntent);
+                    if (RFID_IDs.size()>0){
+                        String aux = RFID_IDs.get(0);
+                        RFID_IDs = new ArrayList<String>();
+                        RFID_IDs.add(aux);
 
-                    finish();
+                        attemp(RFID_IDs);
 
-                    //enviar lectura pot http(diferenciar bin/marcaje)
-
-                    finish();
+                    } else {
+                        tv_msg.setText(R.string.tags_no_encontrados);
+                    }
 
                     break;
                 }
@@ -201,13 +235,13 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
 
     //QR
     protected void openQRreading(){
-        openCamQR();
-        /*
-        if (hasQRbuiltIn){
+        boolean hasQrBuiltIn = true;
+
+        if (hasQrBuiltIn){
             openQRLector();
         } else {
             openCamQR();
-        }*/
+        }
 
     }
     //QR
@@ -226,10 +260,9 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
 
         if (requestCode == 2) {
             if(resultCode == Activity.RESULT_OK){
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("result",data.getStringExtra("ID"));
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                ArrayList<String> aux = new ArrayList<String>();
+                aux.add(data.getStringExtra("ID"));
+                attemp(aux);
 
             }
         }
@@ -301,6 +334,140 @@ public class MarcajeLeerBinActivity extends AppCompatActivity {
         if(mNfcAdapter!= null){
             mNfcAdapter.disableForegroundDispatch(MarcajeLeerBinActivity.this);
         }
+    }
+
+    public class GetBinTask extends AsyncTask<Void, Void, Boolean> {
+
+        String IDs;
+        String binCode;
+
+        GetBinTask(ArrayList<String> id) {
+            IDs = "";
+            for (int i=0;i<id.size();i++){
+                IDs = IDs + id.get(i);
+                if (i>1){
+                    IDs = IDs + ",";
+                }
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            HttpUrl httpUrl = new HttpUrl.Builder()
+                    .scheme("https")
+                    .host("node-red-soser-api.mybluemix.net")
+                    .addPathSegment("bins")
+                    .addQueryParameter("tags_id", IDs)
+                    .build();
+
+            final Request request = new Request.Builder()
+                    .url(httpUrl)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",session.getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                if (response.body() != null) {
+
+                    String jsonResponse = response.body().string();
+                    try {
+
+                        JSONObject obj = new JSONObject(jsonResponse);
+                        JSONArray rows = obj.getJSONArray("rows");
+                        JSONObject lastObj = rows.getJSONObject(rows.length()-1);
+                        String id = lastObj.getString("id");
+                        String[] bin_code = id.split(":");
+
+                        binCode=bin_code[1];
+
+                    } catch (Throwable tx) {
+                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                    }
+
+                }
+
+                return response.isSuccessful();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            getBinTask = null;
+            //showProgress(false);
+
+            if (success){
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("tipoMarcaje","material");
+                returnIntent.putExtra("result", binCode);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            }
+
+            if (!success) {
+                TextView error = findViewById(R.id.tvMarcajeLeerBinError);
+                error.setText("Error en la solicitud, revisar datos y tag leído.");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            getBinTask = null;
+            //showProgress(false);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLayoutView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    private void attemp(ArrayList<String> id){
+        if (getBinTask != null) {
+            return;
+        }
+
+        //showProgress(true);
+        getBinTask = new MarcajeLeerBinActivity.GetBinTask(id);
+        getBinTask.execute((Void) null);
+
     }
 
 }

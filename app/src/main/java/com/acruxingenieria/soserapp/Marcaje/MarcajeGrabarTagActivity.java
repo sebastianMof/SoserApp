@@ -114,7 +114,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
         int SCAN_TRIGGER_HH = 280;
 
         if ((keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH)) {
-            //AGREGAR TAG
+
             switch (lectorSelected) {
                 case "RFID": {
                     tv_msg.setText(R.string.leyendo);
