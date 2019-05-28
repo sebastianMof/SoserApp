@@ -168,11 +168,7 @@ public class MarcajeActivity extends AppCompatActivity {
                 if (materialFragmentSelected){
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
 
-                    intent.putExtra("mUser", session.getUser());
-                    intent.putExtra("positionSelected", session.getPositionSelected());
-                    intent.putExtra("bodegaSelected", session.getBodegaSelected());
                     intent.putExtra("tipoMarcaje", "material");
-
                     intent.putExtra("session", session);
 
                     startActivityForResult(intent,3);
@@ -180,9 +176,6 @@ public class MarcajeActivity extends AppCompatActivity {
                 } else if (binFragmentSelected){
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
 
-                    intent.putExtra("mUser", session.getUser());
-                    intent.putExtra("positionSelected", session.getPositionSelected());
-                    intent.putExtra("bodegaSelected", session.getBodegaSelected());
                     intent.putExtra("tipoMarcaje", "bin");
                     intent.putExtra("session", session);
 

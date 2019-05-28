@@ -31,14 +31,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
     private Sesion session;
     private String tipoMarcaje;
-    //marcaje=material
-    private String marcajeMaterialNombre;
-    private String marcajeMaterialStockcode;
-    private String marcajeMaterialBin;
-    private String marcajeMaterialFechavenc;
-    private String marcajeMaterialCantidad;
-    //marcaje=bin
-    private String marcajeBinBin;
+
     //NFC
     private NfcAdapter mNfcAdapter;
     //RFID
@@ -57,6 +50,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
         session = (Sesion) data.getParcelable("session");
+        receiveDataFromIntent();
 
         tv_msg = (TextView) findViewById(R.id.tvMarcajeBorrarTagError);
         tv_msg.setMovementMethod(new ScrollingMovementMethod());
@@ -68,8 +62,6 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
         configureLectorList();
         configureSpinnerLector();
-
-        receiveDataFromIntent();
 
         configureButtonAtras();
     }
@@ -108,11 +100,7 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(MarcajeBorrarTagActivity.this, MarcajeBorrarTagConfirmacionActivity.class);
                         intent.putExtra("code", result);
-
-                        intent.putExtra("mUser", session.getUser());
-                        intent.putExtra("positionSelected", session.getPositionSelected());
-                        intent.putExtra("bodegaSelected", session.getBodegaSelected());
-
+                        intent.putExtra("session", session);
                         intent.putExtra("lectorSelected", lectorSelected);
 
                         startActivityForResult(intent, 3);
@@ -139,7 +127,6 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
     private void receiveDataFromIntent() {
         tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
-
     }
 
     private void configureLectorList() {
@@ -217,14 +204,13 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
     //QR
     protected void openQRreading(){
-        openCamQR();
-        /*
+        boolean hasQRbuiltIn=true;
+
         if (hasQRbuiltIn){
             openQRLector();
         } else {
             openCamQR();
-        }*/
-
+        }
     }
     //QR
     protected void openCamQR(){

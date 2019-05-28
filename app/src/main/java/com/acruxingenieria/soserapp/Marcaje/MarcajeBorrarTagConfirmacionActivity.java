@@ -18,7 +18,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,8 +30,9 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
 
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
-    private GetBinByCodeTask getBinTask = null;
-    private GetEquipmentByCodeTask getEquipmentTask = null;
+    //private GetBinTask getBinTask = null;
+    private GetEquipmentTask getEquipmentTask = null;
+    private GetEquipmentByIdTask getEquipmentByIdTask=null;
 
     private String codeID;
     private String tipoMarcaje;
@@ -65,7 +68,7 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
         codeID, mUser, positionSelected, bodegaSelected --> DATA;
         */
         if (tipoMarcaje.equals("bin")){
-            attempBin(codeID);
+            //attempBin(codeID);
         } else if (tipoMarcaje.equals("material")){
             attempEquipment(codeID);
         }
@@ -115,18 +118,48 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
     }
 
     private void receiveDataFromIntent() {
-
         codeID = getIntent().getStringExtra("code");
         tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
         lectorSelected = getIntent().getStringExtra("lectorSelected");
     }
 
-    public class GetBinByCodeTask extends AsyncTask<Void, Void, Boolean> {
+    private void attempEquipment(String id){
+        if (getEquipmentTask != null) {
+            return;
+        }
 
-        String ID;
+        Log.e("TEST","progress true");
+        ArrayList<String> aux = new ArrayList<>();
+        aux.add(id);
+        getEquipmentTask = new MarcajeBorrarTagConfirmacionActivity.GetEquipmentTask(aux);
+        getEquipmentTask.execute((Void) null);
+    }
 
-        GetBinByCodeTask(String id) {
-         ID = id;
+    private void attempEquipmentById(String id){
+        if (getEquipmentByIdTask != null) {
+            return;
+        }
+
+        Log.e("TEST","progress true");
+
+        getEquipmentByIdTask = new MarcajeBorrarTagConfirmacionActivity.GetEquipmentByIdTask(id);
+        getEquipmentByIdTask.execute((Void) null);
+    }
+
+    public class GetEquipmentTask extends AsyncTask<Void, Void, Boolean> {
+
+        String IDs;
+        String serialCode;
+
+        GetEquipmentTask(ArrayList<String> id) {
+            IDs = "";
+            for (int i=0;i<id.size();i++){
+                IDs = IDs + id.get(i);
+                if (i>1){
+                    IDs = IDs + ",";
+                }
+            }
+
         }
 
         @Override
@@ -135,43 +168,44 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
 
             OkHttpClient client = new OkHttpClient();
 
+            HttpUrl httpUrl = new HttpUrl.Builder()
+                    .scheme("https")
+                    .host("node-red-soser-api.mybluemix.net")
+                    .addPathSegment("equipment")
+                    .addQueryParameter("tags_id", IDs)
+                    .build();
+
             final Request request = new Request.Builder()
-                    .url("https://node-red-soser-api.mybluemix.net/bins/"+ID)
+                    .url(httpUrl)
                     .addHeader("Content-Type", "application/json")
                     .addHeader("Authorization",session.getToken())
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
-                String jsonResponse = response.body().string();
-                Log.e("TEST", jsonResponse);
 
-                try {
-                    JSONObject obj = new JSONObject(jsonResponse);
+                if (response.body() != null) {
 
-                    DATA = "tipo: " + obj.getString("type");
-                    DATA = DATA + "\n";
-                    DATA = DATA +"codigo de bin: " + obj.getString("bin_code");
-                    DATA = DATA + "\n";
-                    DATA = DATA +"codigo de bodega: " + obj.getString("warehouse_code");
-                    DATA = DATA + "\n";
-                    DATA = DATA + "etiquetas: ";
-                    DATA = DATA + "\n";
-                    JSONArray aux = obj.getJSONArray("tags_id");
-                    for (int i =0; i< aux.length();i++){
-                        DATA = DATA + aux.get(i);
-                        DATA = DATA + "\n";
+                    String jsonResponse = response.body().string();
+                    try {
+
+                        JSONObject obj = new JSONObject(jsonResponse);
+                        JSONArray rows = obj.getJSONArray("rows");
+                        JSONObject lastObj = rows.getJSONObject(rows.length()-1);
+                        String id = lastObj.getString("id");
+                        String[] serial_code = id.split(":");
+
+                        serialCode=serial_code[1];
+
+                        return true;
+
+                    } catch (Throwable tx) {
+                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                        return false;
                     }
-                    DATA = DATA + "creado: " + obj.getString("created_at");
-                    DATA = DATA + "\n";
-                    DATA = DATA + "modificado: " + obj.getString("updated_at");
 
-                } catch (Throwable tx) {
-                    Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
                 }
 
-
-                return response.isSuccessful();
-
+                return false;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -180,31 +214,34 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            getBinTask = null;
-            Log.e("TEST","progress false");
+            getEquipmentTask = null;
+            //showProgress(false);
 
-            showEraseData();
+            if (success){
+                Log.e("TEST","serialCode: "+serialCode);
+                attempEquipmentById(serialCode);
+            }
 
             if (!success) {
-                TextView tv_msg_info = (TextView) findViewById(R.id.tvMarcajeBorrarTagConfirmacionInfo);
-                tv_msg_info.setText("Error en la lectura de la etiqueta.");
-
+                TextView error = findViewById(R.id.tvMarcajeBorrarTagConfirmacionError);
+                error.setText("Error en la solicitud, revisar tag leído.");
             }
 
         }
 
         @Override
         protected void onCancelled() {
-            getBinTask = null;
-            Log.e("TEST","progress false");
+            getEquipmentTask = null;
+            //showProgress(false);
         }
     }
 
-    public class GetEquipmentByCodeTask extends AsyncTask<Void, Void, Boolean> {
+
+    public class GetEquipmentByIdTask extends AsyncTask<Void, Void, Boolean> {
 
         String ID;
 
-        GetEquipmentByCodeTask(String id) {
+        GetEquipmentByIdTask(String id) {
             ID = id;
         }
 
@@ -232,28 +269,27 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
                     DATA = DATA + "\n";
                     DATA = DATA +"Código de bin: " + obj.getString("bin_code");
                     DATA = DATA + "\n";
-                    DATA = DATA +"Vencimiento: " + obj.getString("expire_date");
+                    DATA = DATA +"Fecha de vencimiento: " + obj.getString("expire_date");
                     DATA = DATA + "\n";
                     DATA = DATA +"Cantidad: " + obj.getString("quantity") + " " +obj.getString("measure_unit");
                     DATA = DATA + "\n";
-                    DATA = DATA + "etiquetas: ";
+                    DATA = DATA + "Etiquetas: ";
                     DATA = DATA + "\n";
                     JSONArray aux = obj.getJSONArray("tags_id");
                     for (int i =0; i< aux.length();i++){
                         DATA = DATA + aux.get(i);
                         DATA = DATA + "\n";
                     }
-                    DATA = DATA + "tipo: " + obj.getString("type");
-                    DATA = DATA + "creado: " + obj.getString("created_at");
+                    DATA = DATA + "Tipo: " + obj.getString("type");
                     DATA = DATA + "\n";
-                    DATA = DATA + "modificado: " + obj.getString("updated_at");
+                    DATA = DATA + "Creado: " + obj.getString("created_at");
+                    DATA = DATA + "\n";
+                    DATA = DATA + "Modificado: " + obj.getString("updated_at");
 
                 } catch (Throwable tx) {
                     Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                    return false;
                 }
-
-
-
 
                 return response.isSuccessful();
 
@@ -265,45 +301,25 @@ public class MarcajeBorrarTagConfirmacionActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            getBinTask = null;
+            getEquipmentByIdTask = null;
             Log.e("TEST","progress false");
 
-            showEraseData();
+            if (success){
+                showEraseData();
 
-            if (!success) {
+            } else {
                 TextView tv_msg_info = (TextView) findViewById(R.id.tvMarcajeBorrarTagConfirmacionInfo);
                 tv_msg_info.setText("Error en la lectura de la etiqueta.");
-
             }
 
         }
 
         @Override
         protected void onCancelled() {
-            getBinTask = null;
+            getEquipmentByIdTask = null;
             Log.e("TEST","progress false");
         }
     }
 
-    private void attempBin(String id){
-        if (getBinTask != null) {
-            return;
-        }
-
-        Log.e("TEST","progress true");
-
-        getBinTask = new MarcajeBorrarTagConfirmacionActivity.GetBinByCodeTask(id);
-        getBinTask.execute((Void) null);
-    }
-    private void attempEquipment(String id){
-        if (getEquipmentTask != null) {
-            return;
-        }
-
-        Log.e("TEST","progress true");
-
-        getEquipmentTask = new MarcajeBorrarTagConfirmacionActivity.GetEquipmentByCodeTask(id);
-        getEquipmentTask.execute((Void) null);
-    }
 
 }

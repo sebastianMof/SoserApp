@@ -3,8 +3,6 @@ package com.acruxingenieria.soserapp.Consulta;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,24 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.acruxingenieria.soserapp.Marcaje.MarcajeLeerBinActivity;
 import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.Sesion;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ConsultaUnitariaLecturaFragment extends Fragment {
@@ -47,7 +40,6 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
     private View mFormView1;
     private View mFormView2;
 
-    private Sesion session;
     private GetEquipmentTask getEquipmentTask = null;
     private GetEquipmentByIdTask getEquipmentByIdTask = null;
 
