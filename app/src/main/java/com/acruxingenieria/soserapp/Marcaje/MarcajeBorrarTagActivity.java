@@ -30,9 +30,6 @@ import java.util.ArrayList;
 public class MarcajeBorrarTagActivity extends AppCompatActivity {
 
     private Sesion session;
-    private String mUser;
-    private String positionSelected;
-    private String bodegaSelected;
     private String tipoMarcaje;
     //marcaje=material
     private String marcajeMaterialNombre;
@@ -112,9 +109,9 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                         Intent intent = new Intent(MarcajeBorrarTagActivity.this, MarcajeBorrarTagConfirmacionActivity.class);
                         intent.putExtra("code", result);
 
-                        intent.putExtra("mUser", mUser);
-                        intent.putExtra("positionSelected", positionSelected);
-                        intent.putExtra("bodegaSelected", bodegaSelected);
+                        intent.putExtra("mUser", session.getUser());
+                        intent.putExtra("positionSelected", session.getPositionSelected());
+                        intent.putExtra("bodegaSelected", session.getBodegaSelected());
 
                         intent.putExtra("lectorSelected", lectorSelected);
 
@@ -141,10 +138,6 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
     }
 
     private void receiveDataFromIntent() {
-
-        mUser = getIntent().getStringExtra("mUser");
-        positionSelected = getIntent().getStringExtra("positionSelected");
-        bodegaSelected = getIntent().getStringExtra("bodegaSelected");
         tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
 
     }
@@ -253,9 +246,6 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                 Intent confirmIntent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
                 confirmIntent.putExtra("code", data.getStringExtra("ID"));
 
-                confirmIntent.putExtra("mUser", mUser);
-                confirmIntent.putExtra("positionSelected", positionSelected);
-                confirmIntent.putExtra("bodegaSelected", bodegaSelected);
                 confirmIntent.putExtra("tipoMarcaje", tipoMarcaje);
                 confirmIntent.putExtra("session", session);
 
@@ -299,9 +289,9 @@ public class MarcajeBorrarTagActivity extends AppCompatActivity {
                     Intent newIntent = new Intent(MarcajeBorrarTagActivity.this,MarcajeBorrarTagConfirmacionActivity.class);
                     newIntent.putExtra("code",id);
 
-                    newIntent.putExtra("mUser", mUser);
-                    newIntent.putExtra("positionSelected", positionSelected);
-                    newIntent.putExtra("bodegaSelected", bodegaSelected);
+                    newIntent.putExtra("mUser", session.getUser());
+                    newIntent.putExtra("positionSelected", session.getPositionSelected());
+                    newIntent.putExtra("bodegaSelected", session.getBodegaSelected());
 
                     startActivityForResult(newIntent,3);
 

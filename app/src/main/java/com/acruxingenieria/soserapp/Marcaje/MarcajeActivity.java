@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +17,6 @@ import com.acruxingenieria.soserapp.R;
 import com.acruxingenieria.soserapp.Sesion;
 
 public class MarcajeActivity extends AppCompatActivity {
-
-    private String mUser;
-    private String positionSelected;
-    private String bodegaSelected;
 
     private Sesion session;
 
@@ -60,13 +55,10 @@ public class MarcajeActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
         session = (Sesion) data.getParcelable("session");
-        Log.e("TEST",session.getDeviceId());
 
         //navBar
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationMarcaje);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        receiveDataFromIntent();
 
         //default Fragment
         loadFragment(marcajeMaterialFragment);
@@ -137,9 +129,9 @@ public class MarcajeActivity extends AppCompatActivity {
 
                     intent.putExtra("session", session);
 
-                    intent.putExtra("mUser", mUser);
-                    intent.putExtra("positionSelected", positionSelected);
-                    intent.putExtra("bodegaSelected", bodegaSelected);
+                    intent.putExtra("mUser", session.getUser());
+                    intent.putExtra("positionSelected", session.getPositionSelected());
+                    intent.putExtra("bodegaSelected", session.getBodegaSelected());
 
                     startActivityForResult(intent, 1);
 
@@ -151,9 +143,9 @@ public class MarcajeActivity extends AppCompatActivity {
                     intent.putExtra("tipoMarcaje", "bin");
                     intent.putExtra("marcajeBinBin", et_marcaje_bin_bin.getText().toString());
 
-                    intent.putExtra("mUser", mUser);
-                    intent.putExtra("positionSelected", positionSelected);
-                    intent.putExtra("bodegaSelected", bodegaSelected);
+                    intent.putExtra("mUser", session.getUser());
+                    intent.putExtra("positionSelected", session.getPositionSelected());
+                    intent.putExtra("bodegaSelected", session.getBodegaSelected());
 
                     intent.putExtra("session", session);
 
@@ -173,9 +165,9 @@ public class MarcajeActivity extends AppCompatActivity {
                 if (materialFragmentSelected){
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
 
-                    intent.putExtra("mUser", mUser);
-                    intent.putExtra("positionSelected", positionSelected);
-                    intent.putExtra("bodegaSelected", bodegaSelected);
+                    intent.putExtra("mUser", session.getUser());
+                    intent.putExtra("positionSelected", session.getPositionSelected());
+                    intent.putExtra("bodegaSelected", session.getBodegaSelected());
                     intent.putExtra("tipoMarcaje", "material");
 
                     intent.putExtra("session", session);
@@ -185,9 +177,9 @@ public class MarcajeActivity extends AppCompatActivity {
                 } else if (binFragmentSelected){
                     Intent intent =new Intent(MarcajeActivity.this,MarcajeBorrarTagActivity.class);
 
-                    intent.putExtra("mUser", mUser);
-                    intent.putExtra("positionSelected", positionSelected);
-                    intent.putExtra("bodegaSelected", bodegaSelected);
+                    intent.putExtra("mUser", session.getUser());
+                    intent.putExtra("positionSelected", session.getPositionSelected());
+                    intent.putExtra("bodegaSelected", session.getBodegaSelected());
                     intent.putExtra("tipoMarcaje", "bin");
                     intent.putExtra("session", session);
 
@@ -195,13 +187,6 @@ public class MarcajeActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void receiveDataFromIntent() {
-        mUser= getIntent().getStringExtra("mUser");
-        positionSelected= getIntent().getStringExtra("positionSelected");
-        bodegaSelected= getIntent().getStringExtra("bodegaSelected");
-
     }
 
     @Override

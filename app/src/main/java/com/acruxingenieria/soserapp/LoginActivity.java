@@ -39,6 +39,7 @@ import okhttp3.Response;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    //For HTTP
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
     //For Device ID
@@ -289,6 +290,60 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
         return uniqueID;
+    }
+
+    //----- testing gatillo collahuasi
+    protected int SCAN_BUTTON_ID = 139;
+    protected int SOUND_DOWN_BUTTON_ID = 25;
+    protected int SCAN_TRIGGER_HH = 280;
+
+    boolean shortPress = false;
+    boolean longPress = false;
+
+    @Override
+    public boolean onKeyLongPress(int keyCode, KeyEvent event) {
+        if (keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH){
+            Toast.makeText(this, "Long Press", Toast.LENGTH_SHORT).show();
+            //Long Press code goes here
+
+            shortPress = false;
+            longPress = true;
+            return true;
+        }
+        return super.onKeyLongPress(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH) {
+            event.startTracking();
+            if (longPress == true) {
+                shortPress = false;
+            } else {
+                shortPress = true;
+                longPress = false;
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == SCAN_BUTTON_ID || keyCode == SOUND_DOWN_BUTTON_ID || keyCode == SCAN_TRIGGER_HH) {
+
+            event.startTracking();
+            if (shortPress) {
+                Toast.makeText(this, "Short Press", Toast.LENGTH_SHORT).show();
+                //Short Press code goes here
+            }
+            shortPress = true;
+            longPress = false;
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 
 }

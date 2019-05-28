@@ -25,8 +25,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.acruxingenieria.soserapp.BodegaActivity;
-import com.acruxingenieria.soserapp.Consulta.ConsultaActivity;
 import com.acruxingenieria.soserapp.QR.QrBuiltInActivity;
 import com.acruxingenieria.soserapp.QR.QrCamActivity;
 import com.acruxingenieria.soserapp.R;
@@ -39,7 +37,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -55,10 +52,6 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     private GrabarBinTask grabarBinTask = null;
     private View mProgressView;
     private View mLayoutView;
-
-    private String mUser;
-    private String positionSelected;
-    private String bodegaSelected;
 
     private Sesion session;
     private String tipoMarcaje;
@@ -125,28 +118,22 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             switch (lectorSelected) {
                 case "RFID": {
                     tv_msg.setText(R.string.leyendo);
-
                     testRFID(12, 2, 15, "Yes");
-
                     if (RFID_IDs.size()>0){
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("tipoMarcaje", tipoMarcaje);
-                    setResult(Activity.RESULT_OK, returnIntent);
-
-                    //enviar lectura pot http(diferenciar bin/marcaje)
-
-                    finish();
+                        if (tipoMarcaje.equals("material")){
+                            attemp(RFID_IDs);
+                        }else {
+                            attempBin(RFID_IDs);
+                        }
                     } else {
                         tv_msg.setText(R.string.tags_no_encontrados);
                     }
+
                     break;
                 }
                 case "QR": {
                     tv_msg.setText(R.string.leyendo);
-
                     openQRreading();
-
-                    //enviar lectura pot http(diferenciar bin/marcaje)
 
                     break;
                 }
@@ -212,9 +199,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     }
 
     private void receiveDataFromIntent() {
-        mUser = getIntent().getStringExtra("mUser");
-        positionSelected = getIntent().getStringExtra("positionSelected");
-        bodegaSelected = getIntent().getStringExtra("bodegaSelected");
+
         tipoMarcaje = getIntent().getStringExtra("tipoMarcaje");
         if (tipoMarcaje.equals("material")){
             marcajeMaterialNombre = getIntent().getStringExtra("marcajeMaterialNombre");
@@ -267,13 +252,13 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
     //QR
     protected void openQRreading(){
-        openCamQR();
-        /*
+        boolean hasQrBuiltIn = true;
+
         if (hasQrBuiltIn){
             openQRLector();
         } else {
             openCamQR();
-        }*/
+        }
 
     }
     //QR
@@ -290,13 +275,11 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 1) {//4 for QR unitaria qr cam
+        if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-
-                //MARCAR data.getStringExtra("ID") y si hay exito retornar con result_ok
-
                 ArrayList<String> aux = new ArrayList<String>();
                 aux.add(data.getStringExtra("ID"));
+
                 if (tipoMarcaje=="material"){
                     attemp(aux);
                 }else {
@@ -330,11 +313,13 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             if(tag != null) {
                 String id = bytesToHexString(tag.getId());
                 if (id != null){
-                    Intent returnIntent = new Intent();
-                    returnIntent.putExtra("tipoMarcaje","material");
-                    returnIntent.putExtra("ID",id);
-                    setResult(Activity.RESULT_OK, returnIntent);
-                    finish();
+                    ArrayList<String> aux = new ArrayList<String>();
+                    aux.add(id);
+                    if (tipoMarcaje.equals("material")){
+                        attemp(aux);
+                    }else {
+                        attempBin(aux);
+                    }
                 } else {
                     Toast.makeText(MarcajeGrabarTagActivity.this,"Error al leer TAG NFC",Toast.LENGTH_LONG).show();
                     tv_msg.setText(R.string.lectura_fallida);
@@ -369,7 +354,6 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-
         if(mNfcAdapter!= null){
             mNfcAdapter.disableForegroundDispatch(MarcajeGrabarTagActivity.this);
         }
@@ -449,14 +433,16 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             grabarTask = null;
             showProgress(false);
 
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("tipoMarcaje","material");
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
+            if (success){
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("tipoMarcaje","material");
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            }
 
             if (!success) {
-                Toast.makeText(MarcajeGrabarTagActivity.this, "Error", Toast.LENGTH_LONG).show();
-
+                TextView error = findViewById(R.id.tvMarcajeGrabarTagError);
+                error.setText("Error en la solicitud, revisar datos y tag leído.");
             }
 
         }
@@ -522,15 +508,18 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             grabarBinTask = null;
             showProgress(false);
 
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("tipoMarcaje","bin");
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
-
-            if (!success) {
-                Toast.makeText(MarcajeGrabarTagActivity.this, "Error", Toast.LENGTH_LONG).show();
+            if (success){
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("tipoMarcaje","bin");
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
 
             }
+            if (!success) {
+                TextView error = findViewById(R.id.tvMarcajeGrabarTagError);
+                error.setText("Error en la solicitud, revisar datos y tag leído.");
+            }
+
 
         }
 

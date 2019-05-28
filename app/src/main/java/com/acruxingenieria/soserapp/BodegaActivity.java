@@ -38,6 +38,7 @@ public class BodegaActivity extends AppCompatActivity {
 
     private String positionSelected;
     private String bodegaSelected;
+
     private Sesion session;
 
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
@@ -78,13 +79,11 @@ public class BodegaActivity extends AppCompatActivity {
 
     private void configurePositionList() {
         positionsList = new ArrayList<>();
-        //positionsList.add("POSICION_EJEMPLO");
         positionsList.add("Administrador");
     }
 
     private void configureBodegaList() {
         bodegasList = new ArrayList<>();
-
         getWarehouses();
 
     }

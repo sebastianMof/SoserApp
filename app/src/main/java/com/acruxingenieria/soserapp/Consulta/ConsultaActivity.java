@@ -28,10 +28,6 @@ import java.util.ArrayList;
 
 public class ConsultaActivity extends AppCompatActivity {
 
-    private String mUser;
-    private String positionSelected;
-    private String bodegaSelected;
-
     private String idLecturaUnitaria;
     private ArrayList<String> idLecturaMasiva;
     private String idLecturaMasivaSelected;
@@ -87,15 +83,12 @@ public class ConsultaActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
         session = (Sesion) data.getParcelable("session");
-        Log.e("TEST",session.getToken());
 
         //navBar
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationConsulta);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //hasQRbuiltIn = qrBuiltInActivity.hasQRLector();
-
-        receiveDataFromIntent();
 
         //NFC
         configureNFCAdapter();
@@ -205,12 +198,6 @@ public class ConsultaActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private void receiveDataFromIntent() {
-        mUser= session.getUser();
-        positionSelected= session.getPositionSelected();
-        bodegaSelected= session.getBodegaSelected();
     }
 
     protected String getIdLecturaUnitaria(){

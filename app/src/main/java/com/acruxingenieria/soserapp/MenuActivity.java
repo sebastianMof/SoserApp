@@ -21,10 +21,6 @@ import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity {
 
-    private String mUser;
-    private String positionSelected;
-    private String bodegaSelected;
-
     private ArrayList<String> menuItems;
     private ArrayAdapter<String> menuAdapter;
     private ListView lv_menu;
@@ -41,8 +37,6 @@ public class MenuActivity extends AppCompatActivity {
 
         configureButtonLogOut();
 
-        receiveDataFromIntent();
-
         configureTitle();
 
         configureMenuItems();
@@ -56,19 +50,12 @@ public class MenuActivity extends AppCompatActivity {
         finish();
     }
 
-    private void receiveDataFromIntent() {
-        mUser= session.getUser();
-        positionSelected= session.getPositionSelected();
-        bodegaSelected= session.getBodegaSelected();
-
-    }
-
     private void configureTitle() {
         TextView tv_user = (TextView) findViewById(R.id.tvMenuNombre);
-        tv_user.setText(mUser);
+        tv_user.setText(session.getUser());
 
         TextView tv_bodega = (TextView) findViewById(R.id.tvMenuBodega);
-        tv_bodega.setText(bodegaSelected);
+        tv_bodega.setText(session.getBodegaSelected());
 
 
     }
@@ -110,9 +97,6 @@ public class MenuActivity extends AppCompatActivity {
 
                     case ("Marcaje"): {
                         Intent intent =new Intent(MenuActivity.this,MarcajeActivity.class);
-                        intent.putExtra("mUser", mUser);
-                        intent.putExtra("positionSelected", positionSelected);
-                        intent.putExtra("bodegaSelected", bodegaSelected);
                         intent.putExtra("session",session);
                         startActivity(intent);
                     }
@@ -121,9 +105,6 @@ public class MenuActivity extends AppCompatActivity {
                     case ("Consulta"):{
                         //ConsultaActivity en vez de ConsultaMasivaFiltro
                         Intent intent =new Intent(MenuActivity.this,ConsultaMasivaFiltro.class);
-                        intent.putExtra("mUser", mUser);
-                        intent.putExtra("positionSelected", positionSelected);
-                        intent.putExtra("bodegaSelected", bodegaSelected);
                         intent.putExtra("session",session);
                         startActivity(intent);
                     }
@@ -141,7 +122,6 @@ public class MenuActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent =new Intent(MenuActivity.this,LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("session", session);
                 startActivity(intent);
                 finish();
             }
