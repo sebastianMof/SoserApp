@@ -495,7 +495,18 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
             try (Response response = client.newCall(request).execute()) {
 
-                return response.isSuccessful();
+                try {
+                    JSONObject aux = new JSONObject(response.body().string());
+                    if (aux.getString("ok").equals("true")){
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+                return true;
+                //return response.isSuccessful();
 
             } catch (IOException e) {
                 e.printStackTrace();
