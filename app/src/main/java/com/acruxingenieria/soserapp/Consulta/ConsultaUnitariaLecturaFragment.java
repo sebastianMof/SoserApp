@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.acruxingenieria.soserapp.R;
-import com.acruxingenieria.soserapp.Sesion;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,12 +35,16 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
     private String nombre;
     private String info;
 
+    private String idConsultado;
+
     private View mProgressView;
     private View mFormView1;
     private View mFormView2;
 
-    private GetEquipmentTask getEquipmentTask = null;
     private GetEquipmentByIdTask getEquipmentByIdTask = null;
+    private GetBinByIdTask getBinByIdTask = null;
+    private GetTask getTask = null;
+
 
 
     public ConsultaUnitariaLecturaFragment() {
@@ -80,9 +83,7 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         //Acá hay que hacer la query para el ID dado, lo siquiente es temporal
         if (id!=null){
             showProgress(true);
-            ArrayList<String> aux = new ArrayList<>();
-            aux.add(id);
-            attemp(aux);
+            attemp(id);
 
         }
 
@@ -159,20 +160,22 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         }
     }
 
-    public class GetEquipmentTask extends AsyncTask<Void, Void, Boolean> {
+    private void attemp(String id){
+        if (getTask != null) {
+            return;
+        }
 
-        String IDs;
-        String serialCode;
+        showProgress(true);
+        getTask = new GetTask(id);
+        getTask.execute((Void) null);
+    }
 
-        GetEquipmentTask(ArrayList<String> id) {
-            IDs = "";
-            for (int i=0;i<id.size();i++){
-                IDs = IDs + id.get(i);
-                if (i>1){
-                    IDs = IDs + ",";
-                }
-            }
+    public class GetTask extends AsyncTask<Void, Void, Boolean> {
 
+        String ID;
+
+        GetTask(String id) {
+            ID = id;
         }
 
         @Override
@@ -184,8 +187,8 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
             HttpUrl httpUrl = new HttpUrl.Builder()
                     .scheme("https")
                     .host("node-red-soser-api.mybluemix.net")
-                    .addPathSegment("equipment")
-                    .addQueryParameter("tags_id", IDs)
+                    .addPathSegment("tags")
+                    .addQueryParameter("tags_id", ID)
                     .build();
 
             final Request request = new Request.Builder()
@@ -204,10 +207,17 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
                         JSONObject obj = new JSONObject(jsonResponse);
                         JSONArray rows = obj.getJSONArray("rows");
                         JSONObject lastObj = rows.getJSONObject(rows.length()-1);
-                        String id = lastObj.getString("id");
-                        String[] serial_code = id.split(":");
 
-                        serialCode=serial_code[1];
+                        String id = lastObj.getString("id");
+                        String[] codes = id.split(":");
+
+                        idConsultado=codes[1];
+                        String tipo = codes[0];
+                        if (tipo.equals("equipment")){
+                            attempEquipmentById(idConsultado);
+                        } else if (tipo.equals("bins")){
+                            attempBinById(idConsultado);
+                        }
 
                         return true;
 
@@ -219,6 +229,7 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
                 }
 
                 return false;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -227,12 +238,11 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            getEquipmentTask = null;
+            getTask = null;
             showProgress(false);
 
             if (success){
-                Log.e("TEST","serialCode: "+serialCode);
-                attempById(serialCode);
+                Log.e("TEST","SUCCESS");
             }
 
             if (!success) {
@@ -244,9 +254,19 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
 
         @Override
         protected void onCancelled() {
-            getEquipmentTask = null;
+            getTask = null;
             showProgress(false);
         }
+    }
+
+    private void attempEquipmentById(String serialCode){
+        if (getEquipmentByIdTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        getEquipmentByIdTask = new GetEquipmentByIdTask(serialCode);
+        getEquipmentByIdTask.execute((Void) null);
     }
 
     public class GetEquipmentByIdTask extends AsyncTask<Void, Void, Boolean> {
@@ -346,25 +366,89 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         }
     }
 
-
-    private void attemp(ArrayList<String> id){
-        if (getEquipmentTask != null) {
+    private void attempBinById(String serialCode){
+        if (getBinByIdTask != null) {
             return;
         }
 
         showProgress(true);
-        getEquipmentTask = new GetEquipmentTask(id);
-        getEquipmentTask.execute((Void) null);
+        getBinByIdTask = new GetBinByIdTask(serialCode);
+        getBinByIdTask.execute((Void) null);
     }
 
-    private void attempById(String serialCode){
-        if (getEquipmentByIdTask != null) {
-            return;
+    public class GetBinByIdTask extends AsyncTask<Void, Void, Boolean> {
+
+        String ID;
+
+        GetBinByIdTask(String id) {
+            ID = id;
         }
 
-        showProgress(true);
-        getEquipmentByIdTask = new GetEquipmentByIdTask(serialCode);
-        getEquipmentByIdTask.execute((Void) null);
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            final Request request = new Request.Builder()
+                    .url("https://node-red-soser-api.mybluemix.net/bins/"+ID)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",((ConsultaActivity)Objects.requireNonNull(getActivity())).getSession().getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                String jsonResponse = response.body().string();
+
+                try {
+                    JSONObject obj = new JSONObject(jsonResponse);
+
+                    stockcode = "";
+                    stockcode = stockcode + "Código de bin: " + obj.getString("bin_code");
+                    nombre = "";
+
+                    info = "";
+                    info = info + "Código de bodega: " + obj.getString("warehouse_code")+ "\n";
+                    info = info + "Tipo: " + obj.getString("type")+ "\n";
+                    info = info + "Etiquetas: " + "\n";
+
+                    JSONArray tags = new JSONArray();
+                    tags = obj.getJSONArray("tags_id");
+                    for (int i =0;i<tags.length();i++){
+                        info = info + "   " + tags.getString(i) +"\n";
+                    }
+
+                } catch (Throwable tx) {
+                    Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
+                    return false;
+                }
+
+                return response.isSuccessful();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            getBinByIdTask = null;
+
+            if (success){
+                configureStockcodeTextView();
+                configureNombreTextView();
+                configureTagInfoTextView();
+            } else {
+                info = "Problema con la lectura, revisar etiqueta.";
+                configureTagInfoTextView();
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            getBinByIdTask = null;
+        }
     }
 
 }

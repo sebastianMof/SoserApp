@@ -280,8 +280,9 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                 ArrayList<String> aux = new ArrayList<String>();
                 aux.add(data.getStringExtra("ID"));
 
-                if (tipoMarcaje=="material"){
+                if (tipoMarcaje.equals("material")){
                     attemp(aux);
+                    Log.e("TEST","attemp material");
                 }else {
                     attempBin(aux);
                 }

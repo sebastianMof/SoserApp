@@ -34,6 +34,8 @@ public class ConsultaActivity extends AppCompatActivity {
 
     private Sesion session;
 
+    public String readType="";
+
     private boolean qrReadingDone = false;
 
     //QR
@@ -84,6 +86,7 @@ public class ConsultaActivity extends AppCompatActivity {
         Bundle data = getIntent().getExtras();
         session = (Sesion) data.getParcelable("session");
 
+
         //navBar
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigationConsulta);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -131,6 +134,10 @@ public class ConsultaActivity extends AppCompatActivity {
         return idLecturaMasivaSelected;
     }
 
+    public String getReadType(){
+        return readType;
+    }
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
 
@@ -142,6 +149,7 @@ public class ConsultaActivity extends AppCompatActivity {
 
             if (consultaUnitariaSelected){
                 String lector = ((ConsultaUnitariaFragment)consultaUnitariaFragment).getLectorSelected();
+                readType=lector;
                 boolean readed = false;
 
                 try {
