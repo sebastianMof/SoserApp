@@ -184,20 +184,6 @@ public class MenuActivity extends AppCompatActivity {
                     .build();
 
             try (Response response = client.newCall(request).execute()) {
-
-                if (response.body() != null) {
-
-                    String jsonResponse = response.body().string();
-
-                    try {
-                        Log.e("TEST",jsonResponse);
-
-                    } catch (Throwable tx) {
-                        Log.e("My App", "Could not parse malformed JSON: \"" + jsonResponse + "\"");
-                    }
-
-                }
-
                 return response.isSuccessful();
             } catch (IOException e) {
                 e.printStackTrace();

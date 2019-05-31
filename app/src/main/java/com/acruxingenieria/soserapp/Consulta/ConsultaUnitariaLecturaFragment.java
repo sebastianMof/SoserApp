@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.acruxingenieria.soserapp.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -23,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ConsultaUnitariaLecturaFragment extends Fragment {
@@ -44,7 +47,9 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
     private GetEquipmentByIdTask getEquipmentByIdTask = null;
     private GetBinByIdTask getBinByIdTask = null;
     private GetTask getTask = null;
+    private ReadingTask readingTask = null;
 
+    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
 
     public ConsultaUnitariaLecturaFragment() {
@@ -84,6 +89,9 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         if (id!=null){
             showProgress(true);
             attemp(id);
+            ArrayList<String> aux = new ArrayList<>();
+            aux.add(id);
+            attempReading(aux);
 
         }
 
@@ -449,6 +457,85 @@ public class ConsultaUnitariaLecturaFragment extends Fragment {
         protected void onCancelled() {
             getBinByIdTask = null;
         }
+    }
+
+    public class ReadingTask extends AsyncTask<Void, Void, Boolean> {
+
+        JSONArray IDs;
+
+        ReadingTask(ArrayList<String> id) {
+            IDs = new JSONArray();
+            for (int i=0;i<id.size();i++){
+                IDs.put(id.get(i));
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            JSONObject postdata = new JSONObject();
+
+            try {
+                postdata.put("tags_id",IDs);
+                postdata.put("reading_type",((ConsultaActivity)Objects.requireNonNull(getActivity())).getLectorSelected());
+                postdata.put("warehouse_code",((ConsultaActivity)Objects.requireNonNull(getActivity())).getSession().getBodegaSelected());
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+            Log.e("BODY",postdata.toString());
+
+            final Request request = new Request.Builder()
+                    .url("https://node-red-soser-api.mybluemix.net/handhelds/"+((ConsultaActivity)Objects.requireNonNull(getActivity())).getSession().getDeviceId()+"/readings")
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",((ConsultaActivity)Objects.requireNonNull(getActivity())).getSession().getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                Log.e("TEST",response.body().string());
+                return response.isSuccessful();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            readingTask = null;
+            showProgress(false);
+
+            if (success){
+                Log.e("TEST","SUCCESS");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            readingTask = null;
+            showProgress(false);
+        }
+    }
+
+    private void attempReading(ArrayList<String> id){
+        if (readingTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        readingTask = new ReadingTask(id);
+        readingTask.execute((Void) null);
     }
 
 }

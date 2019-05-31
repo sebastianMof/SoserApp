@@ -50,6 +50,7 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
     private GrabarTask grabarTask = null;
     private GrabarBinTask grabarBinTask = null;
+    private MarkingTask markingTask = null;
     private View mProgressView;
     private View mLayoutView;
 
@@ -122,8 +123,10 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                     if (RFID_IDs.size()>0){
                         if (tipoMarcaje.equals("material")){
                             attemp(RFID_IDs);
+                            attempMarking(RFID_IDs);
                         }else {
                             attempBin(RFID_IDs);
+                            attempMarking(RFID_IDs);
                         }
                     } else {
                         tv_msg.setText(R.string.tags_no_encontrados);
@@ -282,9 +285,10 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
 
                 if (tipoMarcaje.equals("material")){
                     attemp(aux);
-                    Log.e("TEST","attemp material");
+                    attempMarking(aux);
                 }else {
                     attempBin(aux);
+                    attempMarking(aux);
                 }
 
             }
@@ -318,8 +322,10 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
                     aux.add(id);
                     if (tipoMarcaje.equals("material")){
                         attemp(aux);
+                        attempMarking(aux);
                     }else {
                         attempBin(aux);
+                        attempMarking(aux);
                     }
                 } else {
                     Toast.makeText(MarcajeGrabarTagActivity.this,"Error al leer TAG NFC",Toast.LENGTH_LONG).show();
@@ -593,6 +599,85 @@ public class MarcajeGrabarTagActivity extends AppCompatActivity {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLayoutView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+    }
+
+    public class MarkingTask extends AsyncTask<Void, Void, Boolean> {
+
+        JSONArray IDs;
+
+        MarkingTask(ArrayList<String> id) {
+            IDs = new JSONArray();
+            for (int i=0;i<id.size();i++){
+                IDs.put(id.get(i));
+            }
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            OkHttpClient client = new OkHttpClient();
+
+            JSONObject postdata = new JSONObject();
+
+            try {
+                postdata.put("tags_id",IDs);
+                postdata.put("reading_type",lectorSelected);
+                postdata.put("warehouse_code",session.getBodegaSelected());
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            RequestBody body = RequestBody.create(MEDIA_TYPE, postdata.toString());
+            Log.e("BODY",postdata.toString());
+
+            final Request request = new Request.Builder()
+                    .url("https://node-red-soser-api.mybluemix.net/handhelds/"+session.getDeviceId()+"/markings")
+                    .post(body)
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization",session.getToken())
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+
+                Log.e("TEST",response.body().string());
+                return response.isSuccessful();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            markingTask = null;
+            showProgress(false);
+
+            if (success){
+                Log.e("TEST","SUCCESS");
+            }
+
+        }
+
+        @Override
+        protected void onCancelled() {
+            markingTask = null;
+            showProgress(false);
+        }
+    }
+
+    private void attempMarking(ArrayList<String> id){
+        if (markingTask != null) {
+            return;
+        }
+
+        showProgress(true);
+        markingTask = new MarcajeGrabarTagActivity.MarkingTask(id);
+        markingTask.execute((Void) null);
     }
 
 

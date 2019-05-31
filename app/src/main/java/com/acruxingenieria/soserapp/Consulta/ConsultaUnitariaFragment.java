@@ -111,6 +111,7 @@ public class ConsultaUnitariaFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 lectorSelected =  (String) adapterView.getItemAtPosition(position);
+                ((ConsultaActivity)Objects.requireNonNull(getActivity())).setLectorSelected(lectorSelected);
                 tv_msg.setText(R.string.esperando_lectura);
 
             }

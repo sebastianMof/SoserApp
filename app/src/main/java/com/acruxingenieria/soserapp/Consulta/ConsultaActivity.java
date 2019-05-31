@@ -34,6 +34,7 @@ public class ConsultaActivity extends AppCompatActivity {
 
     private Sesion session;
 
+    public String lectorSelected;
     public String readType="";
 
     private boolean qrReadingDone = false;
@@ -329,5 +330,13 @@ public class ConsultaActivity extends AppCompatActivity {
 
     public Sesion getSession() {
         return session;
+    }
+
+    public void setLectorSelected(String lectorSelected){
+        this.lectorSelected = lectorSelected;
+    }
+
+    public String getLectorSelected(){
+         return lectorSelected;
     }
 }
